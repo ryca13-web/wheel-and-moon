@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><base target="_top">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1A1030">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wheel and Moon">
+<title>Wheel and Moon</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&family=Federo&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1A1030;--card:#261845;--ink:#F1E9FF;--mute:#A895CC;--line:#3E2A6B;--hi:#3B2470;--acc:#B58CFF;--gold:#E8C468;--ringbg:#1A1030}
+:root.daylight{--bg:#37276F;--card:#473585;--ink:#FFFBFF;--mute:#CDBFF2;--line:#6450AD;--hi:#5E48B0;--acc:#CDAAFF;--gold:#F7D67F;--ringbg:#37276F}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%;color-scheme:dark}html,body{margin:0;min-height:100%}
+body{font-family:Nunito,system-ui,sans-serif;background:radial-gradient(120% 80% at 80% -10%,#3A2170 0,var(--bg) 55%) fixed,var(--bg);color:var(--ink);-webkit-tap-highlight-color:transparent;font-size:max(15px,2.1vmin)}
+:root.daylight body{background:radial-gradient(120% 80% at 80% -10%,#7152C9 0,var(--bg) 55%) fixed,var(--bg)}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer}
+body::before,body::after{content:'';position:fixed;width:17vw;height:17vw;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240' fill='none' stroke='%23E8C468' stroke-opacity='.4' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M0 235C70 230 120 190 130 130S170 40 235 5'/%3E%3Cpath d='M200 35C205 55 195 70 180 78'/%3E%3Cpath d='M130 130C100 120 90 95 100 75C125 85 135 110 130 130Z' fill='%23B58CFF' fill-opacity='.2'/%3E%3Cpath d='M60 214C45 195 50 175 65 165C80 178 78 200 60 214Z' fill='%23B58CFF' fill-opacity='.2'/%3E%3Cpath d='M165 70C185 75 200 90 200 110C180 108 165 95 165 70Z' fill='%23B58CFF' fill-opacity='.2'/%3E%3C/svg%3E") no-repeat center/contain;pointer-events:none;z-index:0}
+body::before{left:0;bottom:0}body::after{right:0;top:0;transform:rotate(180deg)}
+#app{position:relative;z-index:1;max-width:185vmin;margin:auto;padding:14px 14px 40px;padding-top:max(14px,env(safe-area-inset-top));padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right));padding-bottom:max(40px,env(safe-area-inset-bottom))}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 2px 12px}
+.top h1{margin:0;font:400 1.5em Federo,Cinzel,Georgia,serif;color:var(--gold)}.top h1 small{display:block;font:700 .55em Nunito,sans-serif;color:var(--mute);margin-top:.1em}
+.ib{display:inline-flex;align-items:center;gap:.4em;background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:1.2em .4em 1.2em .4em;padding:.5em .9em;font-weight:800;font-size:.85em}
+.ib:hover,.tile.tap:hover{border-color:var(--acc)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:1000px),(orientation:portrait){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{position:relative;background:var(--card);border:1px solid var(--line);border-radius:2.2em .5em 2.2em .5em;padding:1em 1em .9em;min-height:15em;display:flex;flex-direction:column;justify-content:center;gap:.35em;overflow:hidden;min-width:0}
+.tile.tap{cursor:pointer}
+.day1{text-align:center;align-items:center}
+.bigclk{font-weight:900;font-size:3.3em;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.bigclk small{font-size:.36em;font-weight:800;letter-spacing:0;margin-left:.25em;color:var(--gold)}
+.dw{font:400 1.7em Federo,Cinzel,Georgia,serif;color:var(--gold);line-height:1.1}.dd{font:400 1.45em Federo,Cinzel,Georgia,serif;color:var(--acc);line-height:1.1}
+.sm{color:var(--mute);font-weight:700;font-size:.85em;display:flex;gap:.4em;align-items:center;justify-content:center;flex-wrap:wrap}.sm .ic,.sm .mi{flex:none;color:var(--gold)}
+.sm.l{justify-content:flex-start}
+.tc{flex-direction:row;align-items:center;gap:.8em}.cardsvg{width:4.2em;height:6.3em;flex:none}
+.tt b{display:block;font:400 1.35em Federo,Cinzel,Georgia,serif;line-height:1.15}.tt i{display:block;font-style:normal;font-weight:900;font-size:.8em;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin:.3em 0 .1em}.tt span{color:var(--ink);font-weight:700;display:block}
+.whc{text-align:center;align-items:center}.whc svg{width:7.5em;height:7.5em;flex:none}.whc .ttl{font:400 1.45em Federo,Cinzel,Georgia,serif;color:var(--gold);line-height:1.15}
+.whc .wd{color:var(--mute);font-weight:700;font-size:.85em}
+.mcal{padding:.6em .8em}.mh{display:flex;align-items:center;justify-content:space-between;font:400 1.1em Federo,Cinzel,Georgia,serif;color:var(--gold);margin-bottom:.2em}
+.mh button{background:none;border:0;color:var(--mute);padding:.2em .5em;font-size:1.1em}.mh span{cursor:pointer}
+.mg{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;text-align:center;font-size:.85em;line-height:1.7}
+.mg b{color:var(--mute);font-weight:800}.mg span{position:relative;font-weight:700;border-radius:50%;cursor:pointer}
+.mg .past{color:var(--mute);opacity:.7}.mg .today{background:var(--acc);color:#1A1030;font-weight:900;opacity:1}
+.mg .sab{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--gold)}.mg .today.sab{color:#1A1030}
+.mg .fm:after,.mg .nm:after,.mg .ec:after{content:'';position:absolute;left:50%;bottom:.05em;width:.4em;height:.4em;margin-left:-.2em;border-radius:50%}
+.mg .fm:after{background:var(--ink)}.mg .nm:after{border:1.5px solid var(--mute)}.mg .ec:before{content:'';position:absolute;right:.1em;top:.15em;width:.3em;height:.3em;border-radius:50%;background:#FF8FB5}
+.mg .fm.today:after{background:#1A1030}
+.leg{display:flex;gap:.9em;justify-content:center;color:var(--mute);font-size:.72em;font-weight:700;margin-top:.3em;flex-wrap:wrap}.leg i{display:inline-block;width:.7em;height:.7em;border-radius:50%;vertical-align:-.05em;margin-right:.3em}
+.strip{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 4px;align-items:stretch}
+.up{background:var(--card);border:1px solid var(--line);border-radius:1.2em .4em 1.2em .4em;padding:.5em .9em;display:flex;gap:.6em;align-items:center;cursor:pointer;font-weight:700}
+.up b{font:400 1.1em Federo,Cinzel,Georgia,serif;color:var(--gold)}.up span{color:var(--mute);font-size:.85em}.up .ic,.up .mi{color:var(--gold)}
+.hd{font:400 1.1em Federo,Cinzel,Georgia,serif;color:var(--mute);margin:1.2em 2px .2em}
+.foot{color:var(--mute);font-size:.8em;text-align:center;margin-top:22px}
+/* sheets */
+#sheet{position:fixed;top:0;left:0;right:0;bottom:0;z-index:20;display:none;background:#0A0618cc;overflow-y:auto;-webkit-overflow-scrolling:touch}#sheet.on{display:block}
+.sin{position:relative;max-width:760px;margin:4vh auto;background:var(--bg);border:1px solid var(--gold);border-radius:2.2em .5em 2.2em .5em;padding:1.4em 1.3em 1.6em;box-shadow:0 0 3em #B58CFF55}
+@media (max-width:640px){.sin{margin:0;min-height:100%;border-radius:0;border:0}}
+.close{position:sticky;top:0;float:right;z-index:3;width:2.4em;height:2.4em;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:1em;line-height:1}
+.sin h2{font:400 1.8em Federo,Cinzel,Georgia,serif;color:var(--gold);margin:0 0 .1em;line-height:1.1}.sin h3{font:400 1.15em Federo,Cinzel,Georgia,serif;color:var(--acc);margin:1.3em 0 .35em}
+.sin p{margin:.3em 0;line-height:1.5}.sub{color:var(--mute);font-weight:700}
+.chip{display:inline-block;border:1.5px solid var(--c);border-radius:20px;padding:.2em .7em;margin:.15em .25em .15em 0;font-size:.85em;font-weight:700}
+.kv{display:grid;grid-template-columns:7.5em 1fr;gap:.45em .8em;margin:.4em 0}.kv>b{color:var(--mute);font-weight:800;font-size:.85em;padding-top:.15em}
+.ul{margin:.3em 0;padding-left:1.2em}.ul li{margin:.3em 0;line-height:1.45}
+.ask{margin:1.2em 0 0;padding:.8em 1em;border-left:3px solid var(--gold);background:var(--card);border-radius:.3em 1.2em 1.2em .3em;font-style:italic}
+.big{display:block;margin:.6em auto;width:min(100%,460px)}.big svg{width:100%;display:block;overflow:visible}
+.row{display:flex;align-items:center;gap:.8em;padding:.55em .2em;border-bottom:1px solid var(--line);cursor:pointer}.row:last-child{border:0}
+.row .n{flex:1;font-weight:800}.row .n small{display:block;color:var(--mute);font-weight:700}.row .d{color:var(--gold);font-weight:800;text-align:right;font-size:.9em}.row .d small{display:block;color:var(--mute)}
+.row.hot .n{color:var(--gold)}.row .ic,.row .mi{color:var(--gold);flex:none}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:1.4em}
+.mbig{width:min(55%,230px);margin:.4em auto;display:block;filter:drop-shadow(0 0 1.4em #B58CFF88)}
+.set label{display:block;margin:.9em 0 .25em;font-weight:800;color:var(--mute);font-size:.85em}.set input[type=text],.set input[type=search],.set select{width:100%;padding:.7em;border:1px solid var(--line);border-radius:.8em;background:var(--card);color:var(--ink)}
+.set .r{display:flex;gap:8px}.btn{padding:.65em 1em;border:0;border-radius:.8em;background:var(--acc);color:#1A1030;font-weight:800}.btn.g{background:var(--line);color:var(--ink)}
+.set .ck{display:flex;align-items:center;gap:.6em;margin:.7em 0}.set .ck input{width:1.3em;height:1.3em}
+.hint{color:var(--mute);font-size:.85em;margin:.3em 0}
+/* moon screen */
+#saver{position:fixed;top:0;left:0;right:0;bottom:0;z-index:30;opacity:0;pointer-events:none;transition:opacity 1.6s;background:radial-gradient(90% 70% at 50% 40%,#2B1B55 0,#120A26 60%,#0A0618 100%);overflow:hidden;color:#F1E9FF;font-size:max(14px,2.4vmin);--gold:#E8C468;--mute:#A895CC;--ink:#F1E9FF;--acc:#B58CFF;--ringbg:#1A1030}
+#saver.on{opacity:1;pointer-events:auto}
+body.sv::before,body.sv::after{display:block;z-index:31;width:22vw;height:22vw}
+.stars i{position:absolute;border-radius:50%;background:#FFF3D6;opacity:.1;animation:tw var(--d) ease-in-out infinite;animation-delay:var(--l)}
+@keyframes tw{0%,100%{opacity:.1}50%{opacity:.95}}
+.mc{position:absolute;top:7vh;left:0;right:0;bottom:16vh;display:flex;align-items:center;justify-content:center}
+.mw{--w:38vmin;width:var(--w);text-align:center;animation:drift 480s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(-3vw,-2vh)}to{transform:translate(3vw,2.5vh)}}
+.moon{position:relative}.moon>svg:first-child{width:100%;display:block;filter:drop-shadow(0 0 3vmin #B58CFF88)}
+.moon .whl{position:absolute;left:50%;top:50%;width:190%;transform:translate(-50%,-50%);overflow:visible;pointer-events:none}
+.mname{margin-top:calc(var(--w)*.38);font:400 1.7em Federo,Cinzel,Georgia,serif;color:var(--gold)}
+.mname small{display:block;font:700 .55em Nunito,sans-serif;color:var(--mute);margin-top:.2em}
+.sclk{position:absolute;left:1.3vw;top:1.3vw;z-index:2;font-size:max(46px,9vmin);text-shadow:0 0 .35em #B58CFF77}
+.sbar{position:absolute;left:3vw;right:3vw;bottom:2.5vh;display:flex;gap:.6em 2em;align-items:baseline;justify-content:space-between;flex-wrap:wrap;padding:.8em 1.3em;border-radius:1.2em .4em 1.2em .4em;background:#1D1240dd;outline:1px solid #E8C46840;outline-offset:-.4em;font-weight:700}
+.sbar b{color:var(--mute);margin-right:.5em}.sbar .g{color:var(--gold);font-weight:900}.sbar .ic{vertical-align:-.15em}
+#saver.night .stars,#saver.night .mc{filter:brightness(.55)}#saver.night .sbar{display:none}
+@media (orientation:portrait){#saver{font-size:max(16px,2.9vmin)}.mw{--w:42vmin}.moon .whl{width:190%}.sbar{flex-direction:column;align-items:center;gap:.3em;text-align:center}body.sv::before,body.sv::after{width:34vw;height:34vw}}
+@media (prefers-reduced-motion:reduce){.mw{animation:none}.stars i{animation:none;opacity:.6}}
+@media (max-width:600px){.moon .whl{width:175%}.mw{--w:40vmin}}
+@media (min-width:1001px) and (orientation:landscape){.tile{min-height:max(15em,38vh)}}
+html.kiosk,html.kiosk body,html.wall,html.wall body{overflow:hidden;-webkit-user-select:none;user-select:none}
+html.kiosk #app{max-width:none;height:100vh;display:flex;flex-direction:column;padding:1.8vmin}
+html.kiosk .tiles{flex:1;min-height:0;gap:1.6vmin;grid-auto-rows:1fr}html.kiosk .tile{min-height:0}
+html.kiosk .btns,html.kiosk .nav2,html.kiosk .foot,html.kiosk .hd{display:none!important}html.kiosk .strip{margin:1.4vmin 0 0}html.kiosk .top{margin-bottom:1vmin}
+html.wall,html.wall body{cursor:none}html.wall #app{display:none}
+html.kiosk body{font-size:max(15px,2.9vmin)}html.kiosk .strip .up:nth-child(n+5){display:none}html.kiosk .tile{padding:.8em .9em}
+html.kiosk .whc svg{width:9em;height:9em}html.kiosk .cardsvg{width:4.6em;height:6.9em}
+input,select,textarea{font-size:16px}
+.sin{padding-top:max(1.4em,env(safe-area-inset-top))}
+.sclk{top:max(1.3vw,env(safe-area-inset-top))}.sbar{bottom:max(2.5vh,env(safe-area-inset-bottom))}
+html.kiosk #app{height:100vh;height:100dvh}
+html.nofs [data-a=fs]{display:none}
+@media (max-width:420px){.tiles{gap:10px}.tile{padding:.8em .55em;min-height:13em}.mcal{padding:.5em .4em}.mg{font-size:.76em;line-height:2}.mh{font-size:1em}.mh button{padding:.2em .3em}.top h1{font-size:1.2em;white-space:nowrap}.bigclk{font-size:2.7em}.dw{font-size:1.5em}.dd{font-size:1.25em}.tt b{font-size:1.15em}.cardsvg{width:3.4em;height:5.1em}.whc svg{width:6em;height:6em}.leg{font-size:.65em;gap:.5em}.ib{padding:.45em .7em}}
+</style></head><body>
+<div id="app"></div><div id="sheet"></div>
+<div id="saver"><div class="stars"></div><div class="sclk bigclk"></div><div class="mc"><div class="mw"><div class="moon"></div><div class="mname"></div></div></div><div class="sbar"></div></div>
+<noscript>This page needs JavaScript.</noscript>
+<script>
+'use strict';
+const $=s=>document.querySelector(s),DAY=864e5,RAD=Math.PI/180;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const p2=n=>String(n).padStart(2,'0'),ymd=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
+const mod=(a,n)=>((a%n)+n)%n,sd=x=>Math.sin(x*RAD),cd=x=>Math.cos(x*RAD);
+const mdl=d=>d.toLocaleDateString([], {month:'short',day:'numeric'});
+const wdl=d=>d.toLocaleDateString([], {weekday:'short',month:'short',day:'numeric'});
+const dayN=(a,b)=>Math.round((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/DAY);
+const cdTxt=n=>n===0?'today':n===1?'tomorrow':n<0?Math.abs(n)+' days ago':'in '+n+' days';
+
+/* ---------- SETTINGS (stored only in this browser; a link can carry them) ---------- */
+const DEF={name:'',lat:null,lon:null,place:'',hemi:'auto',units:'F',h24:false,tarot:true,saver:5,cross:'trad',theme:'auto',dim:true};
+let S=Object.assign({},DEF);
+function loadS(){
+ try{Object.assign(S,JSON.parse(localStorage.getItem('wm_s')||'{}'))}catch(e){}
+ try{const q=new URLSearchParams(location.search);
+  ['name','place','units','cross','theme','hemi'].forEach(k=>{if(q.has(k))S[k]=q.get(k)});
+  if(q.has('lat')&&q.has('lon')){S.lat=parseFloat(q.get('lat'));S.lon=parseFloat(q.get('lon'))}
+  if(q.has('dim'))S.dim=q.get('dim')!=='0';
+  if(q.has('h24'))S.h24=q.get('h24')==='1';
+  if(q.has('tarot'))S.tarot=q.get('tarot')!=='0';
+  if(q.has('saver'))S.saver=parseFloat(q.get('saver'))||0}catch(e){}
+ if(!(S.lat>=-90&&S.lat<=90&&S.lon>=-180&&S.lon<=180)){S.lat=null;S.lon=null}}
+function saveS(){try{localStorage.setItem('wm_s',JSON.stringify(S))}catch(e){}}
+const hasLoc=()=>S.lat!=null&&S.lon!=null;
+const isSouth=()=>S.hemi==='s'||(S.hemi==='auto'&&hasLoc()&&S.lat<0);
+
+/* ---------- ASTRONOMY (all computed here; nothing is fetched) ---------- */
+const jdOf=t=>t/DAY+2440587.5,tOf=j=>(j-2440587.5)*DAY,DELTA_T=70;
+const EQM=[[2451623.80984,365242.37404,0.05169,-0.00411,-0.00057],[2451716.56767,365241.62603,0.00325,0.00888,-0.0003],[2451810.21715,365242.01767,-0.11575,0.00337,0.00078],[2451900.05952,365242.74049,-0.06223,-0.00823,0.00032]];
+const EQA=[485,203,199,182,156,136,77,74,70,58,52,50,45,44,29,18,17,16,14,12,12,12,9,8];
+const EQB=[324.96,337.23,342.08,27.85,73.14,171.52,222.54,296.72,243.58,119.81,297.17,21.02,247.54,325.15,60.93,155.12,288.79,198.04,199.76,95.39,287.11,320.81,227.73,15.45];
+const EQC=[1934.136,32964.467,20.186,445267.112,45036.886,22518.443,65928.934,3034.906,9037.513,33718.147,150.678,2281.226,29929.562,31555.956,4443.417,67555.328,4562.452,62894.029,31436.921,14577.848,31931.756,34777.259,1222.114,16859.074];
+const eqCache={};
+/* k: 0 March equinox, 1 June solstice, 2 September equinox, 3 December solstice */
+function season(Y,k){const key=Y+'.'+k;if(eqCache[key])return eqCache[key];
+ const y=(Y-2000)/1000,m=EQM[k],j0=m[0]+m[1]*y+m[2]*y*y+m[3]*y*y*y+m[4]*y*y*y*y,T=(j0-2451545)/36525,W=35999.373*T-2.47,dl=1+0.0334*cd(W)+0.0007*cd(2*W);
+ let s=0;for(let i=0;i<24;i++)s+=EQA[i]*cd(EQB[i]+EQC[i]*T);
+ return eqCache[key]=new Date(tOf(j0+0.00001*s/dl-DELTA_T/86400))}
+
+function phaseTime(k0,ph){const k=k0+ph,T=k/1236.85,T2=T*T,T3=T2*T,T4=T3*T;
+ let j=2451550.09766+29.530588861*k+0.00015437*T2-0.00000015*T3+0.00000000073*T4;
+ const E=1-0.002516*T-0.0000074*T2,M=(2.5534+29.1053567*k-0.0000014*T2-0.00000011*T3)*RAD,
+ Mp=(201.5643+385.81693528*k+0.0107582*T2+0.00001238*T3-0.000000058*T4)*RAD,
+ F=(160.7108+390.67050284*k-0.0016118*T2-0.00000227*T3+0.000000011*T4)*RAD,
+ Om=(124.7746-1.56375588*k+0.0020672*T2+0.00000215*T3)*RAD,s=Math.sin;let c;
+ if(ph===0||ph===0.5){const n=ph===0;
+  c=(n?-0.4072:-0.40614)*s(Mp)+(n?0.17241:0.17302)*E*s(M)+(n?0.01608:0.01614)*s(2*Mp)+(n?0.01039:0.01043)*s(2*F)+(n?0.00739:0.00734)*E*s(Mp-M)-(n?0.00514:0.00515)*E*s(Mp+M)+(n?0.00208:0.00209)*E*E*s(2*M)-0.00111*s(Mp-2*F)-0.00057*s(Mp+2*F)+0.00056*E*s(2*Mp+M)-0.00042*s(3*Mp)+0.00042*E*s(M+2*F)+0.00038*E*s(M-2*F)-0.00024*E*s(2*Mp-M)-0.00017*s(Om)}
+ else{c=-0.62801*s(Mp)+0.17172*E*s(M)-0.01183*E*s(Mp+M)+0.00862*s(2*Mp)+0.00804*s(2*F)+0.00454*E*s(Mp-M)+0.00204*E*E*s(2*M)-0.0018*s(2*Mp-M)-0.0007*s(Mp-2*F)-0.0004*s(3*Mp)-0.00034*s(2*Mp+M)+0.00032*E*s(M+2*F)+0.00032*E*s(M-2*F)-0.00028*E*E*s(Mp+2*M)+0.00027*E*s(2*Mp+M)-0.00017*s(Om);
+  const W=0.00306-0.00038*E*Math.cos(M)+0.00026*Math.cos(Mp)-0.00002*Math.cos(Mp-M)+0.00002*Math.cos(Mp+M)+0.00002*Math.cos(2*F);c+=ph===0.25?W:-W}
+ return new Date(tOf(j+c-DELTA_T/86400))}
+const pcache={};
+/* type 0 new, 1 first quarter, 2 full, 3 last quarter */
+function moonEvents(a,b){const ya=a.getFullYear()+(a-new Date(a.getFullYear(),0,1))/(365.25*DAY),out=[];
+ for(let k=Math.floor((ya-2000)*12.3685)-2;;k++){let first=null;
+  for(let q=0;q<4;q++){const key=k+'.'+q;const t=pcache[key]||(pcache[key]=phaseTime(k,q/4));if(q===0)first=t;if(t>=a&&t<=b)out.push({t:t,type:q})}
+  if(first>b)break}
+ return out}
+const dd_=t=>jdOf(t)-2451545;
+const sunLon=t=>{const d=dd_(t),g=(357.528+0.9856003*d);return mod(280.46+0.9856474*d+1.915*sd(g)+0.02*sd(2*g),360)};
+const moonLon=t=>{const d=dd_(t)/36525;return mod(218.32+481267.881*d+6.29*sd(135+477198.87*d)-1.27*sd(259.3-413335.36*d)+0.66*sd(235.7+890534.22*d)+0.21*sd(269.9+954397.74*d)-0.19*sd(357.5+35999.05*d)-0.11*sd(186.5+966404.03*d),360)};
+const SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const PH_N=['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'];
+function moonAt(t){const e=mod(moonLon(t)-sunLon(t),360),f=e/360;
+ return {f:f,illum:Math.round((1-cd(e))*50),idx:Math.floor(f*8+.5)%8,name:PH_N[Math.floor(f*8+.5)%8],sign:SIGNS[Math.floor(moonLon(t)/30)],sun:SIGNS[Math.floor(sunLon(t)/30)],age:f*29.530588}}
+
+/* sunrise and sunset for a place (NOAA style). Returns {rise,set,len} or {polar:'day'|'night'} */
+function sunTimes(date,lat,lon){
+ const n=Math.round(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate(),12)/DAY+2440587.5-2451545),Js=n-lon/360,
+ M=mod(357.5291+0.98560028*Js,360),C=1.9148*sd(M)+0.02*sd(2*M)+0.0003*sd(3*M),L=mod(M+C+180+102.9372,360),
+ Jt=2451545+Js+0.0053*sd(M)-0.0069*sd(2*L),dec=Math.asin(sd(L)*sd(23.4397)),
+ cw=(sd(-0.833)-sd(lat)*Math.sin(dec))/(cd(lat)*Math.cos(dec));
+ if(cw>1)return {polar:'night',len:0};if(cw<-1)return {polar:'day',len:1440};
+ const w=Math.acos(cw)/RAD;return {rise:new Date(tOf(Jt-w/360)),set:new Date(tOf(Jt+w/360)),len:w*8}}
+function dayLen(d){return hasLoc()?sunTimes(d,S.lat,S.lon):null}
+function lenTxt(m){m=Math.round(m);return Math.floor(m/60)+'h '+p2(m%60)+'m'}
+function trendTxt(d){const a=dayLen(d);if(!a)return '';if(a.polar)return a.polar==='day'?'Midnight sun':'Polar night';
+ const b=dayLen(new Date(d.getFullYear(),d.getMonth(),d.getDate()+1));if(b.polar)return '';const x=Math.round((b.len-a.len)*60);
+ return Math.abs(x)<5?'Day length holding steady':'Days '+(x>0?'lengthening':'shortening')+' by '+Math.floor(Math.abs(x)/60)+'m '+p2(Math.abs(x)%60)+'s a day'}
+
+/* ---------- time formatting ---------- */
+function tm(d){return S.h24?p2(d.getHours())+':'+p2(d.getMinutes()):d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
+function clockHTML(d){if(S.h24)return tm(d);const h=d.getHours()%12||12;return h+':'+p2(d.getMinutes())+'<small>'+(d.getHours()<12?'AM':'PM')+'</small>'}
+
+/* ---------- full-moon names ---------- */
+const FM_NAMES=['Wolf','Snow','Worm','Pink','Flower','Strawberry','Buck','Sturgeon','Corn','Hunter’s','Beaver','Cold'];
+const FM_MEAN={'Wolf':'Wolves howling through deep winter nights.','Snow':'The heaviest snows of the year.','Worm':'The soil softens and earthworms return.','Pink':'Wild ground phlox blooms.','Flower':'Blossoms everywhere.','Strawberry':'The short strawberry harvest.','Buck':'New antlers push out on the bucks.','Sturgeon':'Sturgeon were easily caught in the Great Lakes.','Corn':'Corn ripens for harvest.','Harvest':'The full moon nearest the September equinox; its bright light helped bring in the crops.','Hunter’s':'The moon after the Harvest Moon, for hunting ahead of winter.','Beaver':'Beavers busy preparing for winter.','Cold':'Long, cold nights.','Blue':'The second full moon in one calendar month.'};
+const fmCache={};
+function fullsOfYear(y){return fmCache[y]||(fmCache[y]=moonEvents(new Date(y-1,11,1),new Date(y+1,0,31)).filter(e=>e.type===2).map(e=>e.t))}
+function fullName(t){const y=t.getFullYear(),L=fullsOfYear(y).filter(x=>x.getFullYear()===y),eq=season(y,2);
+ let hi=-1,best=1e18;L.forEach((f,k)=>{const x=Math.abs(f-eq);if(x<best){best=x;hi=k}});
+ const i=L.findIndex(f=>ymd(f)===ymd(t));if(i<0)return '';
+ if(i===hi)return 'Harvest';if(i===hi+1)return 'Hunter’s';
+ const p=L[i-1];if(p&&p.getMonth()===L[i].getMonth())return 'Blue';return FM_NAMES[L[i].getMonth()]}
+const REV_ODDS=3; /* 1 in 3 cards is drawn reversed; change the 3 to taste */
+const ROM=['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'];
+const MAJ=[['The Fool','new beginnings, a leap of faith','recklessness, hesitation'],['The Magician','skill, focused will','scattered energy, trickery'],['The High Priestess','intuition, quiet mystery','secrets, ignoring your gut'],['The Empress','nurture, abundance','smothering, creative block'],['The Emperor','structure, steady authority','rigidity, control issues'],['The Hierophant','tradition, guidance','rebellion, finding your own way'],['The Lovers','union, a meaningful choice','disharmony, mixed values'],['The Chariot','drive, hard-won victory','lost direction, aggression'],['Strength','courage, gentle power','self-doubt, burnout'],['The Hermit','solitude, inner search','isolation, withdrawing too far'],['Wheel of Fortune','cycles, luck turning','bad timing, resisting change'],['Justice','fairness, truth','bias, dodging accountability'],['The Hanged Man','a pause, a new view','stalling, needless sacrifice'],['Death','endings, transformation','clinging, slow change'],['Temperance','balance, patience','excess, imbalance'],['The Devil','attachment, temptation','breaking free, release'],['The Tower','upheaval, revelation','averted disaster, fear of change'],['The Star','hope, renewal','discouragement, lost faith'],['The Moon','illusion, intuition','clarity, fears surfacing'],['The Sun','joy, success','dimmed joy, delay'],['Judgement','reckoning, a calling','self-doubt, ignoring the call'],['The World','completion, wholeness','unfinished, loose ends']];
+const RANKS=['Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Page','Knight','Queen','King'],RAB=['A','2','3','4','5','6','7','8','9','10','Pg','Kn','Q','K'];
+const MIN={Wands:['spark of inspiration|delays, lost spark','planning ahead|fear, poor planning','expansion, foresight|obstacles, delays','celebration, home|unrest at home','friendly rivalry|tension, conflict','victory, recognition|doubt, fall from favor','standing your ground|overwhelmed, giving in','swift progress|delays, slowdown','resilience, a last push|exhaustion, defensiveness','heavy load, duty|burnout, time to delegate','curious start|impatience, flat ideas','bold pursuit|haste, scattered drive','warm confidence|jealousy, insecurity','visionary leader|domineering, impulsive'],
+Cups:['an open heart|blocked feelings','partnership, harmony|imbalance, a rift','friends, celebration|gossip, overindulging','boredom, reflection|renewed interest','loss, grief|acceptance, moving on','nostalgia, kindness|stuck in the past','daydreams, choices|clarity, a sober choice','walking away|fear of leaving, drifting','contentment, a wish granted|smugness, a hollow wish','family joy, harmony|family strain','a gentle message|immaturity, emotional block','romance, an invitation|moodiness, empty promises','compassion, intuition|emotional overload','calm, a balanced heart|volatility, holding back'],
+Swords:['clarity, truth|confusion, harsh words','stalemate, a hard choice|indecision, truth emerges','heartache, honest pain|healing, release','rest, recovery|restlessness, burnout','a hollow win, conflict|reconciling, regret','moving on, calmer waters|stuck, baggage','cleverness, stealth|confession, getting caught','feeling trapped|freedom, a new view','worry, sleepless nights|hope, easing anxiety','a painful ending|recovery, rising again','a curious mind|gossip, scattered thoughts','swift and direct|reckless, tactless','sharp and honest|cold, bitter','logic, fair judgment|harsh, misused power'],
+Pentacles:['a new opportunity|a missed chance','juggling, adapting|overwhelm, disorganized','teamwork, craft|disharmony, shoddy work','saving, security|greed, or letting go','hardship, need|recovery, help arrives','giving, sharing|strings attached, imbalance','patience, review|impatience, wasted effort','practice, mastery|cutting corners, boredom','self-reliance, comfort|overworking, insecurity','legacy, family wealth|instability, family disputes','study, a new plan|procrastination, daydreaming','steady effort|stuck, boredom','nurturing, practical|smothering, self-neglect','stable, generous|greedy, stubborn']};
+function tarotToday(d){let h=2166136261;const k=ymd(d)+'tarot';for(let i=0;i<k.length;i++){h^=k.charCodeAt(i);h=Math.imul(h,16777619)}h>>>=0;
+ const n=h%78,rev=((h>>>9)%REV_ODDS)===0;let c;
+ if(n<22)c={name:MAJ[n][0],top:ROM[n],suit:'',up:MAJ[n][1],rv:MAJ[n][2]};
+ else{const q=n-22,su=['Wands','Cups','Swords','Pentacles'][Math.floor(q/14)],r=q%14,m=MIN[su][r].split('|');c={name:RANKS[r]+' of '+su,top:RAB[r],suit:su,up:m[0],rv:m[1]}}
+ c.rev=rev;c.mean=rev?c.rv:c.up;return c}
+function cardSVG(c){const g='#E8C468',e=c.suit==='Wands'?'<path d="M30 28v38" stroke-width="2.6"/><path d="M30 40c-8-2-10-8-9-12 7 0 10 5 9 12zM30 50c8-2 10-8 9-12-7 0-10 5-9 12z" fill="#E8C468" stroke="none"/>'
+ :c.suit==='Cups'?'<path d="M21 33h18c0 9-4 15-9 15s-9-6-9-15z"/><path d="M30 48v12M23 62h14"/>'
+ :c.suit==='Swords'?'<path d="M30 27l3.2 28-3.2 4-3.2-4z" fill="#E8C468" fill-opacity=".35"/><path d="M22 55h16M30 59v9"/>'
+ :c.suit==='Pentacles'?'<circle cx="30" cy="47" r="13"/><path d="M30 35l7.1 21.7-18.5-13.4h22.8L22.9 56.7z"/>'
+ :'<circle cx="30" cy="47" r="5.5" fill="#E8C468" stroke="none"/><path d="M30 31v7M30 56v7M14 47h7M39 47h7M19 36l5 5M36 53l5 5M41 36l-5 5M24 53l-5 5"/>';
+ return `<svg class="cardsvg" viewBox="0 0 60 90"><rect x="2" y="2" width="56" height="86" rx="7" fill="#241747" stroke="${g}" stroke-width="1.5"/><rect x="6" y="6" width="48" height="78" rx="4" fill="none" stroke="${g}" stroke-opacity=".45"/><path d="M9 18c0-6 3-9 9-9M51 18c0-6-3-9-9-9M9 72c0 6 3 9 9 9M51 72c0 6-3 9-9 9" fill="none" stroke="${g}" stroke-opacity=".7"/><g transform="${c.rev?'rotate(180 30 45)':''}" fill="none" stroke="${g}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><text x="30" y="21" text-anchor="middle" font-size="9" fill="${g}" stroke="none" font-family="Federo,Cinzel,Georgia,serif">${c.top}</text>${e}</g></svg>`}
+function tarotHTML(d){const c=tarotToday(d||new Date());return `<div class="tc">${cardSVG(c)}<div class="tt"><b>${esc(c.name)}</b><i>${c.rev?'Reversed':'Upright'}</i><span>${esc(c.mean)}</span></div></div>`}
+const ECL=[['2026-02-17','Annular solar eclipse'],['2026-03-03','Total lunar eclipse'],['2026-08-12','Total solar eclipse'],['2026-08-27','Partial lunar eclipse'],['2026-08-28','Partial lunar eclipse'],['2027-02-06','Annular solar eclipse'],['2027-02-20','Penumbral lunar eclipse'],['2027-07-18','Penumbral lunar eclipse'],['2027-08-02','Total solar eclipse'],['2027-08-17','Penumbral lunar eclipse'],['2028-01-12','Partial lunar eclipse'],['2028-01-26','Annular solar eclipse'],['2028-07-06','Partial lunar eclipse'],['2028-07-22','Total solar eclipse'],['2028-12-31','Total lunar eclipse']];
+/* ---------- WHEEL OF THE YEAR: the eight festivals (modern Wheel; correspondences differ between traditions) ---------- */
+const WN=['Samhain','Yule','Imbolc','Ostara','Beltane','Litha','Lughnasadh','Mabon'];
+const W8=[
+{n:'Samhain',say:'SAH-win',alt:'Hallowtide, Calan Gaeaf (Welsh), Oíche Shamhna (Irish)',season:'Late autumn',blurb:'Ancestors, endings, the thin veil',
+ theme:'The Celtic new year in many traditions: the end of harvest and the turn into the dark half of the year. A time to remember the dead, honor ancestors, and look ahead through divination.',
+ land:'Leaves are down, the last crops are in, and nights are long. Livestock were brought in and slaughtered or sheltered for winter.',
+ origin:'One of four Gaelic seasonal feasts (with Imbolc, Beltane and Lughnasadh), recorded in early Irish literature. Bonfires and the idea that the boundary between worlds thins are old Gaelic themes; Halloween grew out of it.',
+ also:'Halloween, All Hallows and All Souls, Día de los Muertos (Nov 1–2)',
+ colors:['black','orange','deep purple','silver'],plants:['apples','turnips and pumpkins','mugwort','rosemary','rowan'],stones:['obsidian','jet','smoky quartz','onyx'],foods:['apples','root vegetables','soul cakes','nuts','mulled cider'],symbols:['jack-o’-lantern','candles','cauldron','ancestor altar'],
+ ways:['Set an ancestor altar with photos, candles and a favorite food','Lay an extra place at supper for those who have died','Light a bonfire or a row of candles','Write what you are releasing and burn it safely','Try divination: tarot, scrying, or a quiet question before bed'],
+ ask:'What am I ready to let die back so that something new can grow?'},
+{n:'Yule',say:'yool',alt:'Midwinter, Winter Solstice, Dongzhi, Jól',season:'Midwinter',blurb:'Longest night, the sun’s return',
+ theme:'The solstice, when the sun stands at its lowest and then begins to climb again. Themes of rest, hearth, hope and the return of light.',
+ land:'The longest night of the year in the north (the longest day in the south). Deep cold or deep rain, and the land at rest.',
+ origin:'Yule comes from the Germanic midwinter feast (Old Norse Jól, Old English geola). Evergreens, feasting and the burning of a log are old midwinter customs that also run through Christmas.',
+ also:'Christmas, Hanukkah (near), Saturnalia (Roman), Dongzhi (East Asia), Soyal (Hopi)',
+ colors:['red','green','gold','white','silver'],plants:['holly','ivy','mistletoe','pine and fir','cedar','juniper'],stones:['garnet','bloodstone','clear quartz','ruby'],foods:['spiced cider','nuts','citrus and dried fruit','gingerbread','roast dinner'],symbols:['Yule log','candles','wreath','evergreen tree','sun wheel'],
+ ways:['Stay up through the longest night and greet the dawn','Burn a Yule log or light one candle more each night','Bring in evergreens and decorate with them','Give a gift made by hand','Rest on purpose'],
+ ask:'What light am I tending through the dark?'},
+{n:'Imbolc',say:'IM-bolk',alt:'Candlemas, St Brigid’s Day, Oimelc',season:'Late winter',blurb:'First stirrings, hearth and light',
+ theme:'The first hint of spring. Purification, new inspiration, and the goddess and saint Brigid, keeper of the hearth, poetry and healing.',
+ land:'Snowdrops push up, ewes come into milk, daylight is noticeably longer, and the ground is still cold.',
+ origin:'A Gaelic spring festival around Feb 1. The name is often explained as “in the belly” (ewes in lamb), though that is debated. St Brigid’s Day is Feb 1 in Ireland.',
+ also:'Candlemas (Feb 2), St Brigid’s Day (Feb 1), Groundhog Day (Feb 2)',
+ colors:['white','pale yellow','light green','silver'],plants:['snowdrops','crocus','rushes','rosemary','heather'],stones:['amethyst','moonstone','clear quartz'],foods:['dairy','butter and milk','seeds','oatcakes','honey'],symbols:['Brigid’s cross','candles','snowdrop','sacred well'],
+ ways:['Weave a Brigid’s cross from rushes or paper','Light every lamp in the house one evening','Spring clean and open a window','Bless your seeds before planting','Leave a cloth outside overnight (a brat Bríde) to be blessed by dew'],
+ ask:'What small spark of new is stirring in me?'},
+{n:'Ostara',say:'oh-STAR-ah',alt:'Spring Equinox, Alban Eilir, Nowruz',season:'Spring equinox',blurb:'Balance, new growth',
+ theme:'Day and night in balance, with the light growing stronger. Fertility, planting, and fresh starts.',
+ land:'Bulbs and blossoms, birdsong, returning migrants. Day and night are nearly equal everywhere on Earth.',
+ origin:'The name comes from Eostre, a goddess or festival month recorded by the Venerable Bede in the 8th century. Eggs and hares are modern associations that fit the season of fertility.',
+ also:'Easter (set by the equinox), Nowruz (Persian new year), Passover (spring)',
+ colors:['pastel green','yellow','lilac','pink'],plants:['daffodils','violets','primrose','forsythia','willow'],stones:['aquamarine','rose quartz','moonstone'],foods:['eggs','sprouts and spring greens','honey cakes','dairy'],symbols:['eggs','hares','seeds','butterflies'],
+ ways:['Dye or paint eggs','Plant seeds with an intention for each','Walk at dawn and notice what is greening','Spring clean and let light in','Set an even-handed intention: what do I want to balance?'],
+ ask:'Where do I need balance, and what shall I plant?'},
+{n:'Beltane',say:'BEL-tayn',alt:'May Day, Calan Mai, Walpurgis (eve)',season:'Late spring',blurb:'Fire, flowers, joy and union',
+ theme:'Full spring and the start of summer: fertility, passion, play, and the greening world. A festival of fire and flowers.',
+ land:'Hawthorn in bloom, meadows full of flowers, young animals everywhere, and warm enough to be outside at night.',
+ origin:'A Gaelic fire festival marking the start of summer pastures. Cattle were driven between two bonfires for protection; flowers were hung on doors. Maypoles are an English and Germanic custom.',
+ also:'May Day, Calan Mai (Welsh), Walpurgis Night (Apr 30)',
+ colors:['green','red','white','rainbow ribbons'],plants:['hawthorn','roses','apple blossom','lilac','birch','meadowsweet'],stones:['emerald','malachite','rose quartz'],foods:['oatcakes','strawberries','dairy','May wine with woodruff','honey'],symbols:['maypole','bonfire','flower crown','ribbons'],
+ ways:['Make and wear a flower crown','Dance around a maypole','Light a bonfire (safely) and jump or walk between two fires','Wash your face in morning dew (old folk custom)','Hang flowers on the door or bring greenery inside'],
+ ask:'What am I ready to say yes to, wholeheartedly?'},
+{n:'Litha',say:'LEE-thah',alt:'Midsummer, Summer Solstice, Alban Hefin, St John’s Eve',season:'Midsummer',blurb:'Peak sunlight, strength, abundance',
+ theme:'The sun at its height: the longest day in the north (the shortest in the south). Strength, abundance, and gratitude for the light before it begins to wane.',
+ land:'Long evenings, tall grass and gardens in full growth, first berries, and warm nights.',
+ origin:'Midsummer fires were lit across Europe on the solstice and St John’s Eve (June 23–24). The name Litha comes from Bede’s Old English names for June and July.',
+ also:'Midsummer, St John’s Eve, Juhannus, Jaanipäev',
+ colors:['gold','yellow','orange','bright green','sky blue'],plants:['St John’s wort','oak','sunflower','lavender','roses','elderflower'],stones:['citrine','sunstone','tiger’s eye','carnelian'],foods:['fresh berries','salads','honey','lemon','mead'],symbols:['sun disc','bonfire','sun wheel','wreath'],
+ ways:['Watch the sunrise or stay up through the shortest night','Light a bonfire or a candle in the window','Gather herbs and flowers for a wreath','Hold a long outdoor meal','Write a list of what has bloomed this year'],
+ ask:'What has fully bloomed in my life, and how can I celebrate it?'},
+{n:'Lughnasadh',say:'LOO-nah-sah',alt:'Lammas, Lúnasa, First Harvest',season:'Late summer',blurb:'First harvest, gratitude, craft',
+ theme:'The first grain harvest. Gratitude, the work that feeds you, skill and craft, and the knowledge that summer is peaking and beginning to turn.',
+ land:'Wheat and barley ripen, blackberries come in, and mornings begin to cool.',
+ origin:'A Gaelic harvest festival named for the god Lugh. In Christian England it became Lammas, “loaf mass,” when the first loaf from the new grain was blessed.',
+ also:'Lammas (England), Lúnasa (Irish for August), Tailteann games',
+ colors:['gold','orange','yellow','brown','green'],plants:['wheat and barley','corn','sunflower','blackberries','bilberries'],stones:['citrine','peridot','aventurine'],foods:['fresh bread','corn on the cob','blackberry pie','cider','beer'],symbols:['sheaf of grain','corn dolly','sickle','loaf'],
+ ways:['Bake a loaf from scratch and share it','Make a corn dolly or a grain wreath','Pick berries and make jam','Hold a games day or skill share','Share your garden harvest with neighbors'],
+ ask:'What have I grown, and what must I cut so the rest can ripen?'},
+{n:'Mabon',say:'MAY-bon',alt:'Autumn Equinox, Harvest Home, Alban Elfed',season:'Autumn equinox',blurb:'Second harvest, balance, thanks',
+ theme:'Day and night in balance again, with the dark half of the year ahead. Thanksgiving, the second harvest, and preparing for winter.',
+ land:'Apples and grapes ripen, leaves start to turn, geese fly, and the evenings draw in.',
+ origin:'The name Mabon (from a Welsh mythic figure) was popularized in the 1970s; the equinox itself has always had harvest festivals, such as Harvest Home and Michaelmas, and the Mid-Autumn Festival in East Asia.',
+ also:'Harvest Home, Michaelmas (Sep 29), Mid-Autumn Festival, Thanksgiving traditions',
+ colors:['burgundy','orange','brown','deep gold','purple'],plants:['grapes','apples','acorns','oak leaves','pinecones','marigolds'],stones:['amber','citrine','sapphire'],foods:['apples','grapes and wine','squash','nuts','cornbread','root vegetables'],symbols:['cornucopia','scales','apples','acorn'],
+ ways:['Hold a thanks-giving meal and say what you are grateful for','Collect leaves, acorns and pinecones for a centerpiece','Preserve food: jam, pickles, apple butter','Donate to a food bank','Take a nature walk and gather seeds'],
+ ask:'What am I grateful for, and what am I ready to release before winter?'}];
+const PHASE_TXT=['Dark sky. A time to rest and plant intentions.','The first sliver. Intentions take their first steps.','Half lit and growing. A time for decisions and effort.','Nearly full. Refine, adjust and build.','Fully lit. Culmination, celebration, release.','Just past the peak. Sharing and gratitude.','Half lit and shrinking. Let go and clear out.','The last sliver. Rest and surrender before the new cycle.'];
+
+/* ---------- the eight dates for a given year ---------- */
+const evCache={};
+function slotsOf(Y){const key=Y+S.cross+isSouth();if(evCache[key])return evCache[key];
+ const mar=season(Y,0),jun=season(Y,1),sep=season(Y,2),dec=season(Y,3),decP=season(Y-1,3),mid=(a,b)=>new Date((a.getTime()+b.getTime())/2),tr=(m,d)=>new Date(Y,m,d,12),ast=S.cross==='astro',sth=isSouth();
+ const raw=[[0,ast?mid(sep,dec):tr(9,31),ast],[1,dec,true],[2,ast?mid(decP,mar):tr(1,1),ast],[3,mar,true],[4,ast?mid(mar,jun):tr(4,1),ast],[5,jun,true],[6,ast?mid(jun,sep):tr(7,1),ast],[7,sep,true]];
+ return evCache[key]=raw.map(r=>({idx:sth?(r[0]+4)%8:r[0],t:r[1],exact:r[2]}))}
+function allEvents(Y){let a=[];for(let y=Y-1;y<=Y+1;y++)a=a.concat(slotsOf(y));return a.sort((x,y)=>x.t-y.t)}
+function wheelInfo(now){const L=allEvents(now.getFullYear()),i=L.findIndex(e=>dayN(now,e.t)>0)-1,p=L[i],n=L[i+1],a=dayN(p.t,now),b=dayN(p.t,n.t);
+ return {prev:p,next:n,days:dayN(now,n.t),today:a===0?p:null,ang:((p.idx+a/b)*45)%360,frac:a/b}}
+function nextOf(idx,now){return allEvents(now.getFullYear()).find(e=>e.idx===idx&&dayN(now,e.t)>=0)}
+const evDateTxt=e=>e.exact?wdl(e.t)+' · '+tm(e.t):wdl(e.t);
+
+/* ---------- small drawing helpers ---------- */
+const G='var(--gold)';
+const ICS={sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
+part:'<circle cx="8" cy="8" r="3"/><path d="M8 2v1.5M2 8h1.5M3.8 3.8l1 1M12.2 3.8l-1 1"/><path d="M9 20h8a3.5 3.5 0 0 0 .4-7A5 5 0 0 0 8 13a3.7 3.7 0 0 0 1 7z"/>',
+cloud:'<path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 9a4.5 4.5 0 0 0 1 9z"/>',fog:'<path d="M4 9h16M3 13h14M6 17h14"/>',
+rain:'<path d="M7 15h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 6a4.5 4.5 0 0 0 1 9z"/><path d="M8 20l1-2M12 20l1-2M16 20l1-2"/>',
+snow:'<path d="M7 15h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 6a4.5 4.5 0 0 0 1 9z"/><path d="M8 19h.01M12 19h.01M16 19h.01M10 22h.01M14 22h.01"/>',
+storm:'<path d="M7 15h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 6a4.5 4.5 0 0 0 1 9z"/><path d="M12 15l-2 3h3l-2 3"/>',
+rise:'<path d="M3 19h18M7 19a5 5 0 0 1 10 0M12 11V5M9 8l3-3 3 3"/>',set:'<path d="M3 19h18M7 19a5 5 0 0 1 10 0M12 5v6M9 8l3 3 3-3"/>',
+full:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
+gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>',
+eclipse:'<circle cx="12" cy="12" r="8"/><circle cx="15" cy="12" r="6" fill="currentColor" stroke="none"/>',
+wheel:'<circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16M6.3 6.3l11.4 11.4M17.7 6.3L6.3 17.7"/>',
+moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',left:'<path d="M15 5l-7 7 7 7"/>',right:'<path d="M9 5l7 7-7 7"/>'};
+const ic=(n,s)=>`<svg class="ic" viewBox="0 0 24 24" width="${s||16}" height="${s||16}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICS[n]}</svg>`;
+const wxIc=c=>ic(c===0?'sun':c<3?'part':c===3?'cloud':c<50?'fog':c<70?'rain':c<80?'snow':c<83?'rain':c<90?'snow':'storm');
+function litPath(f){const r=100,c=Math.cos(2*Math.PI*f),rx=(Math.abs(c)*r).toFixed(1),wax=f<.5,s1=wax?1:0,s2=wax?(c>0?0:1):(c>0?1:0);return `M0 ${-r}A${r} ${r} 0 0 ${s1} 0 ${r}A${rx} ${r} 0 0 ${s2} 0 ${-r}Z`}
+function moonIcon(f,sz){return `<svg class="mi" viewBox="-110 -110 220 220" width="${sz||16}" height="${sz||16}" style="${isSouth()?'transform:scaleX(-1)':''}"><circle r="98" fill="none" style="stroke:${G}" stroke-opacity=".6" stroke-width="10"/><path d="${litPath(f)}" style="fill:${G}"/></svg>`}
+let gid=0;
+function moonSVG(f){const id='m'+(++gid);return `<svg viewBox="-110 -110 220 220" style="${isSouth()?'transform:scaleX(-1)':''}"><defs><radialGradient id="g${id}" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#FFF6DC"/><stop offset="1" stop-color="#D9C9F5"/></radialGradient><clipPath id="c${id}"><path d="${litPath(f)}"/></clipPath></defs><circle r="100" fill="#2A1F4F"/><circle r="100" fill="none" stroke="#E8C468" stroke-opacity=".35"/><g clip-path="url(#c${id})"><circle r="100" fill="url(#g${id})"/><circle cx="-30" cy="-28" r="16" fill="#8E7BB8" opacity=".25"/><circle cx="32" cy="12" r="11" fill="#8E7BB8" opacity=".22"/><circle cx="-8" cy="46" r="19" fill="#8E7BB8" opacity=".2"/><circle cx="44" cy="-40" r="8" fill="#8E7BB8" opacity=".22"/></g></svg>`}
+function wheelSVG(w,big,now,sheet){const R=100,V=big?(sheet?180:150):112,tx=a=>Math.sin(a)*R,ty=a=>-Math.cos(a)*R,sw=big?1.4:3,hot=w.today?w.today.idx:w.next.idx;let s='';
+ for(let k=0;k<4;k++){const a=k*Math.PI/4;s+=`<line x1="${-tx(a)}" y1="${-ty(a)}" x2="${tx(a)}" y2="${ty(a)}" style="stroke:${G}" stroke-opacity=".16"/>`}
+ s+=`<circle r="${R}" fill="none" style="stroke:${G}" stroke-opacity=".55" stroke-width="${sw}"/>`;
+ WN.forEach((n,k)=>{const a=k*Math.PI/4,x=tx(a),y=ty(a),q=k%2===1,r=big?(q?5:4):(q?10:8);
+  s+=q?`<circle cx="${x}" cy="${y}" r="${r}" style="fill:${G}"/>`:`<circle cx="${x}" cy="${y}" r="${r}" style="fill:var(--ringbg);stroke:${G}" stroke-width="${sw}"/>`;
+  if(big){const lx=Math.sin(a)*(R+16),ly=-Math.cos(a)*(R+16)+3,an=lx>10?'start':lx<-10?'end':'middle',h=k===hot,e=nextOf(k,now);
+   s+=`<g data-a="sab:${k}" style="cursor:pointer"><text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${an}" font-size="10.5" font-family="Federo,Cinzel,Georgia,serif" style="fill:${G}" fill-opacity="${h?1:.6}">${n}</text><text x="${lx.toFixed(1)}" y="${(ly+(ly<-100?-11:11)).toFixed(1)}" text-anchor="${an}" font-size="7.4" font-family="Nunito,system-ui,sans-serif" font-weight="700" style="fill:var(--mute)" fill-opacity="${h?.95:.6}">${mdl(e.t)}</text></g>`}});
+ if(big)['Winter','Spring','Summer','Autumn'].forEach((nm,q)=>{const a=(67.5+q*90)*Math.PI/180;s+=`<text x="${(Math.sin(a)*84).toFixed(1)}" y="${(-Math.cos(a)*84).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="6.2" letter-spacing="1.2" font-family="Nunito,system-ui,sans-serif" font-weight="800" style="fill:${G}" fill-opacity=".42">${nm.toUpperCase()}</text>`});
+ const m=w.ang*Math.PI/180,mx=tx(m),my=ty(m);
+ s+=`<circle cx="${mx}" cy="${my}" r="${big?13:22}" fill="#B58CFF" fill-opacity=".28"/><circle cx="${mx}" cy="${my}" r="${big?6:11}" fill="#CBA9FF" stroke="#fff" stroke-opacity=".7" stroke-width="${big?1:2}"/>`;
+ return `<svg class="${big?'whl':'whm'}" viewBox="${-V} ${-V} ${V*2} ${V*2}">${s}</svg>`}
+const chipsOf=(a,c)=>a.map(x=>`<span class="chip" style="--c:${c||'var(--gold)'}">${esc(x)}</span>`).join('');
+const MODE=(()=>{try{const m=new URLSearchParams(location.search).get('mode');return m==='wallpaper'||m==='display'?m:''}catch(e){return ''}})();
+if(!(document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen))document.documentElement.classList.add('nofs');if(MODE==='wallpaper')document.documentElement.classList.add('wall');if(MODE==='display')document.documentElement.classList.add('kiosk');
+function toggleFs(){const d=document,e=d.documentElement;try{if(!d.fullscreenElement&&!d.webkitFullscreenElement){(e.requestFullscreen||e.webkitRequestFullscreen||function(){}).call(e)}else{(d.exitFullscreen||d.webkitExitFullscreen||function(){}).call(d)}}catch(x){}}
+/* ---------- weather (Open-Meteo, optional; only the place's coordinates are sent) ---------- */
+let WX=null;
+const WXU='https:\/\/api.open-meteo.com\/v1\/forecast';
+function loadWx(){if(!hasLoc())return;
+ try{const c=JSON.parse(localStorage.getItem('wm_wx')||'null');if(c&&c.k==='v2'+S.lat+','+S.lon&&Date.now()-c.t<18e5){WX=c.v;return}}catch(e){}
+ const u=WXU+'?latitude='+S.lat+'&longitude='+S.lon+'&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&forecast_days=1&timezone=auto';
+fetch(u).then(r=>r.json()).then(j=>{if(!j||!j.current)return;const F=c=>Math.round(c*9/5+32),R=Math.round,cu=j.current.temperature_2m,hi=j.daily.temperature_2m_max[0],lo=j.daily.temperature_2m_min[0];WX={code:j.current.weather_code,nowC:R(cu),nowF:F(cu),hiC:R(hi),loC:R(lo),hiF:F(hi),loF:F(lo)};
+  try{localStorage.setItem('wm_wx',JSON.stringify({k:'v2'+S.lat+','+S.lon,t:Date.now(),v:WX}))}catch(e){}render()}).catch(()=>{})}
+const wxLines=()=>{if(!WX)return [];const c=S.units==='C',n=c?WX.nowC+'\u00B0C / '+WX.nowF+'\u00B0F':WX.nowF+'\u00B0F / '+WX.nowC+'\u00B0C',f=WX.hiF+'\u00B0/'+WX.loF+'\u00B0F',k=WX.hiC+'\u00B0/'+WX.loC+'\u00B0C';return [wxIc(WX.code)+' '+n,(c?k:f),c?f:k]};
+const wxTxt=()=>wxLines().join(' \u00B7 ');
+
+/* ---------- main page ---------- */
+let mOff=0;
+function tileDay(now){const m=moonAt(now),st=hasLoc()?sunTimes(now,S.lat,S.lon):null;
+ return `<div class="tile day1 tap" data-a="day:${ymd(now)}"><div class="bigclk">${clockHTML(now)}</div><div class="dw">${now.toLocaleDateString([], {weekday:'long'})}</div><div class="dd">${now.toLocaleDateString([], {month:'long',day:'numeric'})}</div>
+ <div class="sm" data-a="moon">${moonIcon(m.f,16)} ${m.name} · ${m.illum}%</div>
+ ${st&&st.rise?`<div class="sm">${ic('rise')} ${tm(st.rise)}</div><div class="sm">${ic('set')} ${tm(st.set)}</div>`:''}
+ ${wxLines().map(x=>`<div class="sm">${x}</div>`).join('')}
+ ${hasLoc()?'':'<div class="sm" data-a="set" style="text-decoration:underline">Set your place for sunrise and weather</div>'}</div>`}
+function tileCard(now){const c=tarotToday(now);return `<div class="tile tc tap" data-a="card">${cardSVG(c)}<div class="tt"><b>${esc(c.name)}</b><i>${c.rev?'Reversed':'Upright'}</i><span>${esc(c.mean)}</span></div></div>`}
+function tileWheel(now){const w=wheelInfo(now),e=w.today||w.next,k=e.idx,sunS=moonAt(now).sun,tr=trendTxt(now),dl=dayLen(now);
+ return `<div class="tile whc tap" data-a="wheel">${wheelSVG(w,false,now)}<div class="ttl">${w.today?WN[k]+' today':WN[k]+' in '+w.days+' day'+(w.days===1?'':'s')}</div>
+ <div class="wd">${e.exact?wdl(e.t):mdl(e.t)} · ${W8[k].season}</div><div class="wd">${W8[k].blurb}</div>
+ <div class="wd">Sun in ${sunS}</div>${dl&&!dl.polar?`<div class="wd">Day ${lenTxt(dl.len)}</div>`:''}${tr?`<div class="wd">${tr}</div>`:''}</div>`}
+function calMarks(y,m){const a=new Date(y,m,1),b=new Date(y,m+1,0,23,59),mk={};
+ moonEvents(a,b).forEach(e=>{if(e.type===2)(mk[ymd(e.t)]=mk[ymd(e.t)]||[]).push('fm');else if(e.type===0)(mk[ymd(e.t)]=mk[ymd(e.t)]||[]).push('nm')});
+ slotsOf(y).forEach(e=>{if(e.t.getMonth()===m)(mk[ymd(e.t)]=mk[ymd(e.t)]||[]).push('sab')});
+ ECL.forEach(x=>{if(x[0].slice(0,7)===y+'-'+p2(m+1))(mk[x[0]]=mk[x[0]]||[]).push('ec')});return mk}
+function tileMonth(now){const base=new Date(now.getFullYear(),now.getMonth()+mOff,1),y=base.getFullYear(),m=base.getMonth(),sdw=base.getDay(),dim=new Date(y,m+1,0).getDate(),weeks=Math.ceil((sdw+dim)/7),mk=calMarks(y,m),td=ymd(now);let cells='';
+ for(let i=0;i<weeks*7;i++){const n=i-sdw+1;if(n<1||n>dim){cells+='<i></i>';continue}const k=y+'-'+p2(m+1)+'-'+p2(n);
+  cells+=`<span data-a="day:${k}" class="${[k===td?'today':k<td?'past':'',(mk[k]||[]).join(' ')].join(' ')}">${n}</span>`}
+ return `<div class="tile mcal"><div class="mh"><button data-a="mprev" aria-label="Previous month">${ic('left',14)}</button><span data-a="mnow">${base.toLocaleDateString([], {month:'long',year:'numeric'})}</span><button data-a="mnext" aria-label="Next month">${ic('right',14)}</button></div>
+ <div class="mg">${['S','M','T','W','T','F','S'].map(x=>`<b>${x}</b>`).join('')}${cells}</div>
+ <div class="leg"><span><i style="box-shadow:inset 0 0 0 1.5px var(--gold)"></i>festival</span><span><i style="background:var(--ink)"></i>full</span><span><i style="border:1.5px solid var(--mute)"></i>new</span><span><i style="background:#FF8FB5"></i>eclipse</span></div></div>`}
+function upcoming(now){const t0=new Date(now.getFullYear(),now.getMonth(),now.getDate()),L=[],w=allEvents(now.getFullYear()).filter(e=>dayN(now,e.t)>=0).slice(0,3);
+ w.forEach(e=>L.push({t:e.t,h:`<div class="up" data-a="sab:${e.idx}">${ic('wheel')}<b>${WN[e.idx]}</b><span>${mdl(e.t)} · ${cdTxt(dayN(now,e.t))}</span></div>`}));
+ moonEvents(t0,new Date(t0.getTime()+75*DAY)).filter(e=>e.type===0||e.type===2).slice(0,4).forEach(e=>{const nm=e.type===2?(fullName(e.t)?fullName(e.t)+' Moon':'Full Moon'):'New Moon';
+  L.push({t:e.t,h:`<div class="up" data-a="moon">${moonIcon(e.type===2?.5:0,16)}<b>${nm}</b><span>${mdl(e.t)} · ${cdTxt(dayN(now,e.t))}</span></div>`})});
+ ECL.filter(x=>x[0]>=ymd(now)).slice(0,1).forEach(x=>{const d=new Date(x[0]+'T12:00:00');L.push({t:d,h:`<div class="up" data-a="moon">${ic('eclipse')}<b>${x[1].replace(' eclipse','')} eclipse</b><span>${mdl(d)} · ${cdTxt(dayN(now,d))}</span></div>`})});
+ return L.sort((a,b)=>a.t-b.t).map(x=>x.h).join('')}
+function greet(now){const h=now.getHours(),g=h<5?'Still up':h<12?'Good morning':h<18?'Good afternoon':'Good evening';return S.name?g+', '+esc(S.name):''}
+function render(){applyTheme();const now=new Date();
+ $('#app').innerHTML=`<div class="top"><h1>☾ Wheel &amp; Moon<small>${greet(now)}${S.place?(S.name?' · ':'')+esc(S.place):''}</small></h1><div class="btns" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button class="ib" data-a="saver">${ic('moon')} Moon screen</button><button class="ib" data-a="fs" aria-label="Full screen">${ic('full')}</button><button class="ib" data-a="set" aria-label="Settings">${ic('gear')}</button></div></div>
+ <div class="tiles">${tileDay(now)}${S.tarot?tileCard(now):''}${tileWheel(now)}${tileMonth(now)}</div>
+ <div class="hd">Coming up in the sky</div><div class="strip">${upcoming(now)}</div>
+ <div class="strip nav2"><button class="ib" data-a="wheel">${ic('wheel')} Wheel of the Year guide</button><button class="ib" data-a="moon">${ic('moon')} Moon guide</button></div>
+ <div class="foot">Dates are calculated on your device. Tap any tile, day or festival for more.</div>`}
+
+/* ---------- sheets ---------- */
+function openSheet(h){$('#sheet').innerHTML=`<div class="sin"><button class="close" data-a="close" aria-label="Close">×</button>${h}</div>`;$('#sheet').classList.add('on');$('#sheet').scrollTop=0;document.body.style.overflow='hidden'}
+function closeSheet(){$('#sheet').classList.remove('on');document.body.style.overflow=''}
+const list=a=>a&&a.length?`<ul class="ul">${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'';
+function sheetWheel(){const now=new Date(),w=wheelInfo(now),tr=trendTxt(now),dl=dayLen(now),m=moonAt(now),e=w.today||w.next;
+ const rows=[0,1,2,3,4,5,6,7].map(k=>nextOf(k,now)).sort((a,b)=>a.t-b.t).map(ev=>`<div class="row ${ev.idx===e.idx?'hot':''}" data-a="sab:${ev.idx}">${ic('wheel')}<div class="n">${WN[ev.idx]}<small>${W8[ev.idx].season} · ${W8[ev.idx].blurb}</small></div><div class="d">${evDateTxt(ev)}<small>${cdTxt(dayN(now,ev.t))}</small></div></div>`).join('');
+ openSheet(`<h2>Wheel of the Year</h2><p class="sub">${isSouth()?'Southern Hemisphere: the festivals are shifted by half a year, so Yule falls in June.':'Northern Hemisphere calendar.'} Tap a festival to explore.</p>
+ <div class="big">${wheelSVG(w,true,now,true)}</div>
+ <div class="kv"><b>Now</b><div>${w.today?WN[w.today.idx]+' is today.':'Between '+WN[w.prev.idx]+' and '+WN[w.next.idx]+', '+w.days+' day'+(w.days===1?'':'s')+' to go.'}</div><b>Sun</b><div>In ${m.sun}${dl&&!dl.polar?'. Day length '+lenTxt(dl.len)+'. '+tr:''}</div><b>Moon</b><div>${m.name}, ${m.illum}% lit, in ${m.sign}</div></div>
+ <h3>The eight festivals</h3>${rows}
+ <h3>About the Wheel</h3><p>The Wheel of the Year is a modern calendar built from older seasonal customs: the four Gaelic fire festivals (Samhain, Imbolc, Beltane, Lughnasadh) and the four solstices and equinoxes. Its present form took shape in the 20th century. Names, dates and correspondences vary between traditions, so treat what follows as a menu, not a rulebook.</p>
+ <p class="hint">Solstices and equinoxes use their exact astronomical moments. Other festivals use ${S.cross==='astro'?'astronomical midpoints between them':'the traditional calendar dates'}; change this in settings.</p>`)}
+let curSab=0;
+function sheetSab(k){const now=new Date(),d=W8[k],ev=nextOf(k,now),prev=(k+7)%8,next=(k+1)%8;curSab=k;
+ openSheet(`<h2>${d.n}</h2><p class="sub">${d.say} · ${d.season}</p>
+ <div class="kv"><b>Next</b><div>${evDateTxt(ev)} (${cdTxt(dayN(now,ev.t))})</div><b>Also called</b><div>${esc(d.alt)}</div><b>Also marked as</b><div>${esc(d.also)}</div></div>
+ <h3>Theme</h3><p>${esc(d.theme)}</p><h3>In the land</h3><p>${esc(d.land)}</p><h3>Roots</h3><p>${esc(d.origin)}</p>
+ <h3>Correspondences</h3><div class="kv"><b>Colors</b><div>${chipsOf(d.colors,'var(--acc)')}</div><b>Plants</b><div>${chipsOf(d.plants,'var(--gold)')}</div><b>Stones</b><div>${chipsOf(d.stones,'var(--acc)')}</div><b>Foods</b><div>${chipsOf(d.foods,'var(--gold)')}</div><b>Symbols</b><div>${chipsOf(d.symbols,'var(--acc)')}</div></div>
+ <h3>Ways to mark it</h3>${list(d.ways)}<div class="ask">${esc(d.ask)}</div>
+ <div class="nav"><button class="ib" data-a="sab:${prev}">${ic('left',14)} ${WN[prev]}</button><button class="ib" data-a="wheel">All</button><button class="ib" data-a="sab:${next}">${WN[next]} ${ic('right',14)}</button></div>`)}
+function sheetMoon(){const now=new Date(),m=moonAt(now),t0=new Date(now.getTime()-DAY),ev=moonEvents(t0,new Date(now.getTime()+60*DAY)).filter(e=>e.t>=now).slice(0,8),NM=['New Moon','First Quarter','Full Moon','Last Quarter'],fi=fullsOfYear(now.getFullYear()).filter(f=>f.getFullYear()===now.getFullYear());
+ const nf=ev.find(e=>e.type===2),nfn=nf&&fullName(nf.t);
+ openSheet(`<h2>Moon</h2><p class="sub">${m.name} · ${m.illum}% lit · ${m.age.toFixed(1)} days old · in ${m.sign}</p>
+ <div class="mbig">${moonSVG(m.f)}</div><p style="text-align:center">${PHASE_TXT[m.idx]}</p>
+ <h3>Next phases</h3>${ev.map(e=>`<div class="row" style="cursor:default">${moonIcon([0,.25,.5,.75][e.type],22)}<div class="n">${NM[e.type]}${e.type===2&&fullName(e.t)?'<small>'+fullName(e.t)+' Moon</small>':''}</div><div class="d">${wdl(e.t)}<small>${tm(e.t)} · ${cdTxt(dayN(now,e.t))}</small></div></div>`).join('')}
+ ${nfn?`<h3>${nfn} Moon</h3><p>${FM_MEAN[nfn]}</p>`:''}
+ <h3>Eclipses ahead</h3>${ECL.filter(x=>x[0]>=ymd(now)).slice(0,5).map(x=>{const d=new Date(x[0]+'T12:00:00');return `<div class="row" style="cursor:default">${ic('eclipse',20)}<div class="n">${x[1]}</div><div class="d">${mdl(d)}<small>${d.getFullYear()}</small></div></div>`}).join('')||'<p class="hint">No eclipses listed.</p>'}
+ <p class="hint">Eclipse dates (UT) come from NASA’s published lists; visibility depends on where you are.</p>
+ <h3>Full moons in ${now.getFullYear()}</h3>${fi.map(f=>{const nm=fullName(f);return `<div class="row" style="cursor:default">${moonIcon(.5,20)}<div class="n">${nm?nm+' Moon':'Full Moon'}</div><div class="d">${mdl(f)}</div></div>`}).join('')}
+ <p class="hint">Names are traditional northern-hemisphere folk names.</p>
+ <h3>The eight phases</h3>${PH_N.map((n,i)=>`<div class="row" style="cursor:default${i===m.idx?';color:var(--gold)':''}">${moonIcon(i/8,22)}<div class="n">${n}<small>${PHASE_TXT[i]}</small></div></div>`).join('')}
+ ${isSouth()?'<p class="hint">In the southern hemisphere the lit side is shown on the opposite side, as you see it.</p>':''}`)}
+function sheetDay(k){const d=new Date(k+'T12:00:00'),m=moonAt(d),now=new Date(),mk=calMarks(d.getFullYear(),d.getMonth())[k]||[],sab=slotsOf(d.getFullYear()).find(e=>ymd(e.t)===k),st=hasLoc()?sunTimes(d,S.lat,S.lon):null,ec=ECL.find(x=>x[0]===k);
+ const full=mk.indexOf('fm')>=0?fullName(d):'',c=tarotToday(d);
+ openSheet(`<h2>${d.toLocaleDateString([], {weekday:'long',month:'long',day:'numeric',year:'numeric'})}</h2><p class="sub">${cdTxt(dayN(now,d))}</p>
+ ${sab?`<div class="row" data-a="sab:${sab.idx}">${ic('wheel')}<div class="n">${WN[sab.idx]}<small>${W8[sab.idx].blurb}</small></div></div>`:''}
+ ${mk.indexOf('fm')>=0?`<div class="row" data-a="moon">${moonIcon(.5,22)}<div class="n">${full?full+' Moon':'Full Moon'}</div></div>`:''}${mk.indexOf('nm')>=0?`<div class="row" data-a="moon">${moonIcon(0,22)}<div class="n">New Moon</div></div>`:''}${ec?`<div class="row" data-a="moon">${ic('eclipse',20)}<div class="n">${ec[1]}</div></div>`:''}
+ <div class="kv"><b>Moon</b><div>${m.name}, ${m.illum}% lit, in ${m.sign}</div><b>Sun</b><div>In ${m.sun}</div>${st?`<b>Sunrise</b><div>${st.rise?tm(st.rise):st.polar==='day'?'sun stays up':'sun stays down'}</div><b>Sunset</b><div>${st.set?tm(st.set):'—'}</div><b>Day length</b><div>${lenTxt(st.len)}</div>`:''}<b>Card</b><div>${esc(c.name)} (${c.rev?'reversed':'upright'}): ${esc(c.mean)}</div></div>`)}
+function sheetCard(){const c=tarotToday(new Date());openSheet(`<h2>${esc(c.name)}</h2><p class="sub">${c.rev?'Reversed':'Upright'}</p><div style="width:9em;margin:.6em auto">${cardSVG(c)}</div><p style="text-align:center;font-size:1.15em">${esc(c.mean)}</p><h3>Both meanings</h3><div class="kv"><b>Upright</b><div>${esc(c.up)}</div><b>Reversed</b><div>${esc(c.rv)}</div></div><p class="hint">One card for each date, the same for everyone. Treat it as a prompt for reflection.</p>`)}
+let GEO=[];
+function sheetSet(msg){const sel=(k,v,o)=>`<select data-s="${k}">${o.map(x=>`<option value="${x[0]}"${String(S[k])===String(x[0])?' selected':''}>${x[1]}</option>`).join('')}</select>`;
+ openSheet(`<div class="set"><h2>Settings</h2><p class="sub">Saved only on this device.</p>
+ <label>Your first name (optional)</label><input type="text" data-s="name" value="${esc(S.name)}" placeholder="Shows in the greeting">
+ <label>Your place</label><div class="r"><input type="search" id="q" placeholder="City or town" value=""><button class="btn" data-a="find">Find</button><button class="btn g" data-a="geo">Use my location</button></div>
+ <div id="geo">${GEO.map((g,i)=>`<div class="row" data-a="pick:${i}"><div class="n">${esc(g.name)}<small>${esc([g.admin1,g.country].filter(Boolean).join(', '))}</small></div></div>`).join('')}</div>
+ <p class="hint">${hasLoc()?'Now: '+esc(S.place||S.lat.toFixed(2)+', '+S.lon.toFixed(2))+'.':'Not set.'} ${msg||''} Used for sunrise, sunset, day length, hemisphere and weather. Only coordinates are sent, to Open-Meteo, for weather.</p>
+ <label>Hemisphere</label>${sel('hemi',0,[['auto','Automatic (from your place)'],['n','Northern'],['s','Southern']])}
+ <label>Show first</label>${sel('units',0,[['F','Fahrenheit, then Celsius'],['C','Celsius, then Fahrenheit']])}
+ <label>Clock</label>${sel('h24',0,[['false','12-hour'],['true','24-hour']])}
+ <label>Cross-quarter festivals (Samhain, Imbolc, Beltane, Lughnasadh)</label>${sel('cross',0,[['trad','Traditional calendar dates'],['astro','Astronomical midpoints']])}
+ <label>Moon screen starts after</label>${sel('saver',0,[['0','Never (button only)'],['1','1 minute idle'],['5','5 minutes idle'],['10','10 minutes idle'],['30','30 minutes idle']])}
+ <label>Look</label>${sel('theme',0,[['auto','Automatic (lighter by day)'],['dark','Always deep purple'],['light','Always lighter']])}
+ <div class="ck"><input type="checkbox" id="tarot"${S.tarot?' checked':''}><label for="tarot" style="margin:0">Show the card of the day</label></div>
+ <div class="r" style="margin-top:1em"><button class="btn" data-a="link">Copy a link with these settings</button><button class="btn g" data-a="reset">Reset</button></div>
+ <div class="r" style="margin-top:.6em"><button class="btn g" data-a="link:wallpaper">Wallpaper link</button><button class="btn g" data-a="link:display">Full-screen display link</button></div><p class="hint">Wallpaper: the moon screen, always on. Display: the four tiles filling the screen, then the moon screen when idle.</p><p class="hint" id="lk"></p></div>`)}
+function afterSet(){saveS();evCache_clear();loadWx();render();restartIdle()}
+function evCache_clear(){for(const k in evCache)delete evCache[k]}
+
+/* ---------- theme ---------- */
+function applyTheme(){const n=new Date(),f=S.theme;let day=false;
+ if(f==='light')day=true;else if(f==='dark')day=false;else{const st=hasLoc()?sunTimes(n,S.lat,S.lon):null;day=st&&st.rise?(n>=st.rise&&n<st.set):(n.getHours()>=7&&n.getHours()<19)}
+ document.documentElement.classList.toggle('daylight',day)}
+
+/* ---------- moon screen ---------- */
+const SV={on:false};let lastActive=Date.now(),idleT=null;
+function mkStars(el){if(el.children.length)return;for(let i=0;i<70;i++){const s=document.createElement('i'),z=1+Math.random()*2.4;s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${z}px;height:${z}px;--d:${3+Math.random()*5}s;--l:-${Math.random()*8}s`;el.appendChild(s)}}
+function saverBar(){const now=new Date(),m=moonAt(now),h=now.getHours(),night=S.dim!==false&&(h>=22||h<6),w=wheelInfo(now);
+ $('#saver').classList.toggle('night',night);document.body.classList.toggle('night',night&&SV.on);
+ const html=moonSVG(m.f)+wheelSVG(w,true,now);if(SV.m!==html){SV.m=html;$('#saver .moon').innerHTML=html}
+ $('#saver .mname').innerHTML=m.name+'<small>'+m.illum+'% lit · in '+m.sign+'</small>';$('#saver .sclk').innerHTML=clockHTML(now);
+ const nf=moonEvents(now,new Date(now.getTime()+40*DAY)).find(e=>e.type===2),nn=nf&&fullName(nf.t),e=w.today||w.next;
+ $('#saver .sbar').innerHTML=`<div>${WX?wxTxt():''}</div><div><b>Next full moon</b><span class="g">${nf?(nn?nn+' Moon · ':'')+mdl(nf.t):''}</span></div><div><span class="g">${w.today?WN[e.idx]+' today':WN[e.idx]+' '+cdTxt(w.days)}</span></div>`}
+function startSaver(){SV.on=true;mkStars($('#saver .stars'));saverBar();document.body.classList.add('sv');$('#saver').classList.add('on')}
+function wake(){lastActive=Date.now();if(MODE==='wallpaper'||!SV.on)return;SV.on=false;$('#saver').classList.remove('on');document.body.classList.remove('sv','night')}
+function restartIdle(){clearInterval(idleT);if(MODE==='wallpaper'){idleT=setInterval(()=>{if(!SV.on)startSaver();else saverBar()},5000);return}const ms=(parseFloat(S.saver)||0)*60000;if(!ms)return;idleT=setInterval(()=>{if(SV.on)saverBar();else if(Date.now()-lastActive>ms&&!$('#sheet').classList.contains('on'))startSaver()},5000)}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,i=a.indexOf(':'),k=i<0?a:a.slice(0,i),v=i<0?'':a.slice(i+1);
+ if(k==='close')closeSheet();else if(k==='wheel')sheetWheel();else if(k==='sab')sheetSab(+v);else if(k==='moon')sheetMoon();else if(k==='day')sheetDay(v);else if(k==='card')sheetCard();
+ else if(k==='fs')toggleFs();else if(k==='set')sheetSet();else if(k==='saver'){closeSheet();startSaver()}else if(k==='mprev'){mOff--;render()}else if(k==='mnext'){mOff++;render()}else if(k==='mnow'){mOff=0;render()}
+ else if(k==='find'){const q=$('#q').value.trim();if(!q)return;fetch('https:\/\/geocoding-api.open-meteo.com\/v1\/search?count=6&name='+encodeURIComponent(q)).then(r=>r.json()).then(j=>{GEO=j.results||[];sheetSet(GEO.length?'Pick one below.':'No match. Try the city name alone.')}).catch(()=>sheetSet('Could not search right now.'))}
+ else if(k==='pick'){const g=GEO[+v];if(g){S.lat=g.latitude;S.lon=g.longitude;S.place=g.name+(g.admin1?', '+g.admin1:'');GEO=[];afterSet();sheetSet('Saved.')}}
+ else if(k==='geo'){if(!navigator.geolocation){sheetSet('This browser cannot share location. Search for your city instead.');return}navigator.geolocation.getCurrentPosition(p=>{S.lat=Math.round(p.coords.latitude*100)/100;S.lon=Math.round(p.coords.longitude*100)/100;S.place='My location';afterSet();sheetSet('Saved.')},()=>sheetSet('Location was not shared. Search for your city instead.'),{timeout:10000})}
+ else if(k==='reset'){S=Object.assign({},DEF);try{localStorage.removeItem('wm_s');localStorage.removeItem('wm_wx')}catch(x){};WX=null;afterSet();sheetSet('Reset.')}
+ else if(k==='link'){const q=new URLSearchParams();if(S.name)q.set('name',S.name);if(hasLoc()){q.set('lat',S.lat);q.set('lon',S.lon);if(S.place)q.set('place',S.place)}q.set('hemi',S.hemi);q.set('units',S.units);q.set('h24',S.h24?1:0);q.set('tarot',S.tarot?1:0);q.set('cross',S.cross);q.set('saver',S.saver);if(!S.dim)q.set('dim',0);if(v)q.set('mode',v);
+  const u=location.href.split('?')[0].split('#')[0]+'?'+q.toString();try{navigator.clipboard.writeText(u).then(()=>{$('#lk').textContent='Link copied.'},()=>{$('#lk').textContent=u})}catch(x){$('#lk').textContent=u}}});
+document.addEventListener('change',e=>{const t=e.target;if(t.id==='tarot'){S.tarot=t.checked;afterSet();return}const k=t.dataset&&t.dataset.s;if(!k)return;
+ S[k]=k==='h24'?t.value==='true':k==='saver'?parseFloat(t.value):t.value;afterSet()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(SV.on)wake();else closeSheet()}});
+['pointerdown','touchstart','keydown'].forEach(t=>addEventListener(t,wake,{passive:true}));
+$('#sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
+let WL=null;async function keepAwake(){try{if('wakeLock' in navigator&&!WL){WL=await navigator.wakeLock.request('screen');WL.addEventListener('release',()=>{WL=null})}}catch(e){}}
+addEventListener('pointerdown',()=>{if(SV.on)keepAwake()},{passive:true});
+function tick(){const h=clockHTML(new Date());document.querySelectorAll('.bigclk').forEach(e=>{if(e.innerHTML!==h)e.innerHTML=h})}
+loadS();loadWx();render();restartIdle();mkStars($('#saver .stars'));if(MODE==='wallpaper')startSaver();
+setInterval(loadWx,20*60000);
+if(MODE==='wallpaper'){let first=true;document.addEventListener('click',()=>{if(first){first=false;toggleFs()}});document.addEventListener('dblclick',()=>{const q=new URLSearchParams(location.search);q.delete('mode');location.search=q.toString()})}
+setInterval(tick,5000);setInterval(()=>{if(!$('#sheet').classList.contains('on'))render()},60000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){loadWx();render()}});
+let seen=false;try{seen=!!localStorage.getItem('wm_seen')}catch(e){}
+if(!hasLoc()&&!MODE&&!seen){try{localStorage.setItem('wm_seen','1')}catch(e){}setTimeout(()=>sheetSet('Welcome! Set your place to see sunrise and weather.'),600)}
+</script></body></html>
