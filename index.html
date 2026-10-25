@@ -79,7 +79,7 @@ body::before{left:0;bottom:0}body::after{right:0;top:0;transform:rotate(180deg)}
 body.sv::before,body.sv::after{display:block;z-index:31;width:22vw;height:22vw}
 .stars i{position:absolute;border-radius:50%;background:#FFF3D6;opacity:.1;animation:tw var(--d) ease-in-out infinite;animation-delay:var(--l)}
 @keyframes tw{0%,100%{opacity:.1}50%{opacity:.95}}
-.mc{position:absolute;top:7vh;left:0;right:0;bottom:16vh;display:flex;align-items:center;justify-content:center}
+.mc{position:absolute;top:14vh;left:0;right:0;bottom:8vh;display:flex;align-items:center;justify-content:center}
 .mw{--w:38vmin;width:var(--w);text-align:center;animation:drift 480s ease-in-out infinite alternate}
 @keyframes drift{from{transform:translate(-3vw,-2vh)}to{transform:translate(3vw,2.5vh)}}
 .moon{position:relative}.moon>svg:first-child{width:100%;display:block;filter:drop-shadow(0 0 3vmin #B58CFF88)}
@@ -107,9 +107,22 @@ input,select,textarea{font-size:16px}
 html.kiosk #app{height:100vh;height:100dvh}
 html.nofs [data-a=fs]{display:none}
 @media (max-width:420px){.tiles{gap:10px}.tile{padding:.8em .55em;min-height:13em}.mcal{padding:.5em .4em}.mg{font-size:.76em;line-height:2}.mh{font-size:1em}.mh button{padding:.2em .3em}.top h1{font-size:1.2em;white-space:nowrap}.bigclk{font-size:2.7em}.dw{font-size:1.5em}.dd{font-size:1.25em}.tt b{font-size:1.15em}.cardsvg{width:3.4em;height:5.1em}.whc svg{width:6em;height:6em}.leg{font-size:.65em;gap:.5em}.ib{padding:.45em .7em}}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.pn{position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none;display:none}
+.pl,.pr{position:absolute;top:50%;transform:translateY(-54%);font-size:.74em;line-height:1.4;background:#1D1240bb;border-radius:1.2em .4em 1.2em .4em;padding:1em 1.1em;outline:1px solid #E8C46840;outline-offset:-.4em;max-height:80vh;overflow:hidden}
+.pl{left:2.5vw;width:18vw}.pr{right:2.5vw;width:25vw}
+.pn h4{font:400 1.3em Federo,Cinzel,Georgia,serif;color:var(--gold);margin:0 0 .25em}
+.pn h5{font:800 .72em Nunito,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:.8em 0 .2em}
+.pn p{margin:.2em 0}.pn .sub2{color:var(--mute);font-weight:700;font-size:.9em}
+.pn ul{margin:.2em 0;padding-left:1.1em}.pn li{margin:.25em 0}
+.pn .chip{font-size:.8em;padding:.05em .55em;margin:.1em .2em .1em 0;border-width:1px}
+@media (min-aspect-ratio:3/2){.pn{display:block}.pl{top:14vh;transform:none}.pr{top:auto;bottom:11vh;transform:none}body.sv::before,body.sv::after{width:15vw;height:15vw}}
+@media (orientation:portrait) and (min-width:700px){.mc{top:8vh;bottom:40vh}.pn{display:grid;top:auto;bottom:12vh;left:4vw;right:4vw;grid-template-columns:1fr 1fr;gap:3vw;align-items:start}.pl,.pr{position:static;transform:none;width:auto;max-height:28vh}}
+#saver.night .pn{filter:brightness(.55)}
+@media (orientation:portrait) and (min-width:700px){.mw{--w:36vmin}.mc{top:8vh;bottom:46vh}.pn{bottom:14vh}.pl,.pr{font-size:.66em;max-height:34vh}.pn .x1{display:none}.sbar{padding:.5em 1em;font-size:.8em}}
 </style></head><body>
 <div id="app"></div><div id="sheet"></div>
-<div id="saver"><div class="stars"></div><div class="sclk bigclk"></div><div class="mc"><div class="mw"><div class="moon"></div><div class="mname"></div></div></div><div class="sbar"></div></div>
+<div id="saver"><div class="stars"></div><div class="sclk bigclk"></div><div class="mc"><div class="mw"><div class="moon"></div><div class="mname"></div></div></div><div class="pn"><div class="pl"></div><div class="pr"></div></div><div class="sbar"></div></div>
 <noscript>This page needs JavaScript.</noscript>
 <script>
 'use strict';
@@ -123,13 +136,16 @@ const dayN=(a,b)=>Math.round((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())
 const cdTxt=n=>n===0?'today':n===1?'tomorrow':n<0?Math.abs(n)+' days ago':'in '+n+' days';
 
 /* ---------- SETTINGS (stored only in this browser; a link can carry them) ---------- */
-const DEF={name:'',lat:null,lon:null,place:'',hemi:'auto',units:'F',h24:false,tarot:true,saver:5,cross:'trad',theme:'auto',dim:true};
+const DEF={name:'',lat:null,lon:null,place:'',hemi:'auto',units:'F',h24:false,tarot:true,saver:5,cross:'trad',theme:'auto',dim:true,cycle:false,sunSec:60,moonSec:60};
+const snap15=v=>Math.min(3600,Math.max(15,Math.round((parseFloat(v)||60)/15)*15));
 let S=Object.assign({},DEF);
 function loadS(){
  try{Object.assign(S,JSON.parse(localStorage.getItem('wm_s')||'{}'))}catch(e){}
  try{const q=new URLSearchParams(location.search);
   ['name','place','units','cross','theme','hemi'].forEach(k=>{if(q.has(k))S[k]=q.get(k)});
   if(q.has('lat')&&q.has('lon')){S.lat=parseFloat(q.get('lat'));S.lon=parseFloat(q.get('lon'))}
+  if(q.has('cycle'))S.cycle=q.get('cycle')==='1';
+  if(q.has('sun'))S.sunSec=snap15(q.get('sun'));if(q.has('moon'))S.moonSec=snap15(q.get('moon'));
   if(q.has('dim'))S.dim=q.get('dim')!=='0';
   if(q.has('h24'))S.h24=q.get('h24')==='1';
   if(q.has('tarot'))S.tarot=q.get('tarot')!=='0';
@@ -340,7 +356,7 @@ function wheelSVG(w,big,now,sheet){const R=100,V=big?(sheet?180:150):112,tx=a=>M
  s+=`<circle cx="${mx}" cy="${my}" r="${big?13:22}" fill="#B58CFF" fill-opacity=".28"/><circle cx="${mx}" cy="${my}" r="${big?6:11}" fill="#CBA9FF" stroke="#fff" stroke-opacity=".7" stroke-width="${big?1:2}"/>`;
  return `<svg class="${big?'whl':'whm'}" viewBox="${-V} ${-V} ${V*2} ${V*2}">${s}</svg>`}
 const chipsOf=(a,c)=>a.map(x=>`<span class="chip" style="--c:${c||'var(--gold)'}">${esc(x)}</span>`).join('');
-const MODE=(()=>{try{const m=new URLSearchParams(location.search).get('mode');return m==='wallpaper'||m==='display'?m:''}catch(e){return ''}})();
+const MODE=(()=>{try{const m=new URLSearchParams(location.search).get('mode');return m==='wallpaper'||m==='moon'?'wallpaper':m==='display'?'display':''}catch(e){return ''}})();
 if(!(document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen))document.documentElement.classList.add('nofs');if(MODE==='wallpaper')document.documentElement.classList.add('wall');if(MODE==='display')document.documentElement.classList.add('kiosk');
 function toggleFs(){const d=document,e=d.documentElement;try{if(!d.fullscreenElement&&!d.webkitFullscreenElement){(e.requestFullscreen||e.webkitRequestFullscreen||function(){}).call(e)}else{(d.exitFullscreen||d.webkitExitFullscreen||function(){}).call(d)}}catch(x){}}
 /* ---------- weather (Open-Meteo, optional; only the place's coordinates are sent) ---------- */
@@ -441,11 +457,15 @@ function sheetSet(msg){const sel=(k,v,o)=>`<select data-s="${k}">${o.map(x=>`<op
  <label>Show first</label>${sel('units',0,[['F','Fahrenheit, then Celsius'],['C','Celsius, then Fahrenheit']])}
  <label>Clock</label>${sel('h24',0,[['false','12-hour'],['true','24-hour']])}
  <label>Cross-quarter festivals (Samhain, Imbolc, Beltane, Lughnasadh)</label>${sel('cross',0,[['trad','Traditional calendar dates'],['astro','Astronomical midpoints']])}
- <label>Moon screen starts after</label>${sel('saver',0,[['0','Never (button only)'],['1','1 minute idle'],['5','5 minutes idle'],['10','10 minutes idle'],['30','30 minutes idle']])}
+ <label>Moon screen starts after (when not alternating)</label>${sel('saver',0,[['0','Never (button only)'],['1','1 minute idle'],['5','5 minutes idle'],['10','10 minutes idle'],['30','30 minutes idle']])}
+ <h3 style="margin-top:1.4em">Sun and moon screens</h3><p class="hint">The sun screen is the four tiles. The moon screen is the moon inside the Wheel, with sky and festival details.</p>
+ <div class="ck"><input type="checkbox" id="cycle"${S.cycle?' checked':''}><label for="cycle" style="margin:0">Alternate between the sun screen and the moon screen</label></div>
+ <label>Sun screen stays for <b id="sunL">${secTxt(S.sunSec)}</b></label><input type="range" min="15" max="600" step="15" value="${S.sunSec}" data-s="sunSec" data-lbl="sunL">
+ <label>Moon screen stays for <b id="moonL">${secTxt(S.moonSec)}</b></label><input type="range" min="15" max="600" step="15" value="${S.moonSec}" data-s="moonSec" data-lbl="moonL">
  <label>Look</label>${sel('theme',0,[['auto','Automatic (lighter by day)'],['dark','Always deep purple'],['light','Always lighter']])}
  <div class="ck"><input type="checkbox" id="tarot"${S.tarot?' checked':''}><label for="tarot" style="margin:0">Show the card of the day</label></div>
  <div class="r" style="margin-top:1em"><button class="btn" data-a="link">Copy a link with these settings</button><button class="btn g" data-a="reset">Reset</button></div>
- <div class="r" style="margin-top:.6em"><button class="btn g" data-a="link:wallpaper">Wallpaper link</button><button class="btn g" data-a="link:display">Full-screen display link</button></div><p class="hint">Wallpaper: the moon screen, always on. Display: the four tiles filling the screen, then the moon screen when idle.</p><p class="hint" id="lk"></p></div>`)}
+ <div class="r" style="margin-top:.6em;flex-wrap:wrap"><button class="btn g" data-a="link:cycle">Sun &amp; moon display link</button><button class="btn g" data-a="link:sun">Sun-only link</button><button class="btn g" data-a="link:moon">Moon-only link</button></div><p class="hint">Sun &amp; moon: the four tiles and the moon screen take turns, for the times above. Sun-only: just the four tiles. Moon-only: the moon screen always on. These links fill the screen with no buttons.</p><p class="hint" id="lk"></p></div>`)}
 function afterSet(){saveS();evCache_clear();loadWx();render();restartIdle()}
 function evCache_clear(){for(const k in evCache)delete evCache[k]}
 
@@ -455,17 +475,24 @@ function applyTheme(){const n=new Date(),f=S.theme;let day=false;
  document.documentElement.classList.toggle('daylight',day)}
 
 /* ---------- moon screen ---------- */
-const SV={on:false};let lastActive=Date.now(),idleT=null;
+let phaseT=Date.now();const SV={on:false};let lastActive=Date.now(),idleT=null;
 function mkStars(el){if(el.children.length)return;for(let i=0;i<70;i++){const s=document.createElement('i'),z=1+Math.random()*2.4;s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${z}px;height:${z}px;--d:${3+Math.random()*5}s;--l:-${Math.random()*8}s`;el.appendChild(s)}}
+const secTxt=s=>s<60?s+' sec':Math.floor(s/60)+' min'+(s%60?' '+(s%60)+' sec':'');
+function panels(now){const m=moonAt(now),w=wheelInfo(now),e=w.today||w.next,d=W8[e.idx],ev=moonEvents(now,new Date(now.getTime()+45*DAY)),nf=ev.find(x=>x.type===2),nn=ev.find(x=>x.type===0),ec=ECL.find(x=>x[0]>=ymd(now)),st=hasLoc()?sunTimes(now,S.lat,S.lon):null,fnm=nf&&fullName(nf.t),day=Math.floor(now.getTime()/864e5),rit=[0,1,2].map(i=>d.ways[(day+i)%d.ways.length]);
+ const ecd=ec&&new Date(ec[0]+'T12:00:00');
+ const L=`<h5 style="margin-top:0">Moon and sky</h5><h4>Tonight</h4><p>${PHASE_TXT[m.idx]}</p><h5>Moon</h5><p>${m.illum}% lit · in ${m.sign}</p>${nf?`<h5>Next full moon</h5><p><b>${fnm?fnm+' Moon':'Full Moon'}</b><br>${wdl(nf.t)}</p>${fnm?`<p class="sub2">${FM_MEAN[fnm]}</p>`:''}`:''}${nn?`<h5>Next new moon</h5><p>${wdl(nn.t)}</p>`:''}${ec?`<h5>Next eclipse</h5><p>${ec[1]}<br>${mdl(ecd)}</p>`:''}<h5>Sun</h5><p>In ${m.sun}${st&&st.rise?'<br>'+tm(st.rise)+' to '+tm(st.set):''}</p>`;
+ const R=`<h5 style="margin-top:0">Wheel of the Year</h5><h4>${WN[e.idx]}</h4><p class="sub2">${w.today?'Today':cdTxt(w.days)} · ${d.season}</p><p>${esc(d.theme)}</p><h5>Rituals</h5><ul>${rit.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><h5>Colors</h5><div>${chipsOf(d.colors,'var(--acc)')}</div><h5>Plants</h5><div>${chipsOf(d.plants,'var(--gold)')}</div><h5>Stones</h5><div>${chipsOf(d.stones,'var(--acc)')}</div><div class="x1"><h5>Foods</h5><div>${chipsOf(d.foods,'var(--gold)')}</div></div>`;
+ return [L,R]}
 function saverBar(){const now=new Date(),m=moonAt(now),h=now.getHours(),night=S.dim!==false&&(h>=22||h<6),w=wheelInfo(now);
  $('#saver').classList.toggle('night',night);document.body.classList.toggle('night',night&&SV.on);
+ const pn=panels(now);if(SV.pl!==pn[0]){SV.pl=pn[0];$('#saver .pl').innerHTML=pn[0]}if(SV.pr!==pn[1]){SV.pr=pn[1];$('#saver .pr').innerHTML=pn[1]}
  const html=moonSVG(m.f)+wheelSVG(w,true,now);if(SV.m!==html){SV.m=html;$('#saver .moon').innerHTML=html}
  $('#saver .mname').innerHTML=m.name+'<small>'+m.illum+'% lit · in '+m.sign+'</small>';$('#saver .sclk').innerHTML=clockHTML(now);
  const nf=moonEvents(now,new Date(now.getTime()+40*DAY)).find(e=>e.type===2),nn=nf&&fullName(nf.t),e=w.today||w.next;
  $('#saver .sbar').innerHTML=`<div>${WX?wxTxt():''}</div><div><b>Next full moon</b><span class="g">${nf?(nn?nn+' Moon · ':'')+mdl(nf.t):''}</span></div><div><span class="g">${w.today?WN[e.idx]+' today':WN[e.idx]+' '+cdTxt(w.days)}</span></div>`}
-function startSaver(){SV.on=true;mkStars($('#saver .stars'));saverBar();document.body.classList.add('sv');$('#saver').classList.add('on')}
-function wake(){lastActive=Date.now();if(MODE==='wallpaper'||!SV.on)return;SV.on=false;$('#saver').classList.remove('on');document.body.classList.remove('sv','night')}
-function restartIdle(){clearInterval(idleT);if(MODE==='wallpaper'){idleT=setInterval(()=>{if(!SV.on)startSaver();else saverBar()},5000);return}const ms=(parseFloat(S.saver)||0)*60000;if(!ms)return;idleT=setInterval(()=>{if(SV.on)saverBar();else if(Date.now()-lastActive>ms&&!$('#sheet').classList.contains('on'))startSaver()},5000)}
+function startSaver(){SV.on=true;phaseT=Date.now();mkStars($('#saver .stars'));saverBar();document.body.classList.add('sv');$('#saver').classList.add('on')}
+function wake(){lastActive=Date.now();phaseT=Date.now();if(MODE==='wallpaper'||!SV.on)return;SV.on=false;$('#saver').classList.remove('on');document.body.classList.remove('sv','night')}
+function restartIdle(){clearInterval(idleT);if(MODE==='wallpaper'){idleT=setInterval(()=>{if(!SV.on)startSaver();else saverBar()},5000);return}if(S.cycle){phaseT=Date.now();idleT=setInterval(()=>{const sh=$('#sheet').classList.contains('on');if(SV.on){saverBar();if(Date.now()-phaseT>=S.moonSec*1000)wake()}else if(sh)phaseT=Date.now();else if(Date.now()-phaseT>=S.sunSec*1000)startSaver()},1000);return}const ms=(parseFloat(S.saver)||0)*60000;if(!ms)return;idleT=setInterval(()=>{if(SV.on)saverBar();else if(Date.now()-lastActive>ms&&!$('#sheet').classList.contains('on'))startSaver()},5000)}
 
 /* ---------- events ---------- */
 document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,i=a.indexOf(':'),k=i<0?a:a.slice(0,i),v=i<0?'':a.slice(i+1);
@@ -475,10 +502,11 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t
  else if(k==='pick'){const g=GEO[+v];if(g){S.lat=g.latitude;S.lon=g.longitude;S.place=g.name+(g.admin1?', '+g.admin1:'');GEO=[];afterSet();sheetSet('Saved.')}}
  else if(k==='geo'){if(!navigator.geolocation){sheetSet('This browser cannot share location. Search for your city instead.');return}navigator.geolocation.getCurrentPosition(p=>{S.lat=Math.round(p.coords.latitude*100)/100;S.lon=Math.round(p.coords.longitude*100)/100;S.place='My location';afterSet();sheetSet('Saved.')},()=>sheetSet('Location was not shared. Search for your city instead.'),{timeout:10000})}
  else if(k==='reset'){S=Object.assign({},DEF);try{localStorage.removeItem('wm_s');localStorage.removeItem('wm_wx')}catch(x){};WX=null;afterSet();sheetSet('Reset.')}
- else if(k==='link'){const q=new URLSearchParams();if(S.name)q.set('name',S.name);if(hasLoc()){q.set('lat',S.lat);q.set('lon',S.lon);if(S.place)q.set('place',S.place)}q.set('hemi',S.hemi);q.set('units',S.units);q.set('h24',S.h24?1:0);q.set('tarot',S.tarot?1:0);q.set('cross',S.cross);q.set('saver',S.saver);if(!S.dim)q.set('dim',0);if(v)q.set('mode',v);
+ else if(k==='link'){const q=new URLSearchParams();if(S.name)q.set('name',S.name);if(hasLoc()){q.set('lat',S.lat);q.set('lon',S.lon);if(S.place)q.set('place',S.place)}q.set('hemi',S.hemi);q.set('units',S.units);q.set('h24',S.h24?1:0);q.set('tarot',S.tarot?1:0);q.set('cross',S.cross);q.set('saver',S.saver);if(!S.dim)q.set('dim',0);if(v==='cycle'){q.set('mode','display');q.set('cycle',1);q.set('sun',S.sunSec);q.set('moon',S.moonSec)}else if(v==='sun'){q.set('mode','display');q.set('cycle',0)}else if(v==='moon'){q.set('mode','moon')}else if(S.cycle){q.set('cycle',1);q.set('sun',S.sunSec);q.set('moon',S.moonSec)}
   const u=location.href.split('?')[0].split('#')[0]+'?'+q.toString();try{navigator.clipboard.writeText(u).then(()=>{$('#lk').textContent='Link copied.'},()=>{$('#lk').textContent=u})}catch(x){$('#lk').textContent=u}}});
-document.addEventListener('change',e=>{const t=e.target;if(t.id==='tarot'){S.tarot=t.checked;afterSet();return}const k=t.dataset&&t.dataset.s;if(!k)return;
- S[k]=k==='h24'?t.value==='true':k==='saver'?parseFloat(t.value):t.value;afterSet()});
+document.addEventListener('change',e=>{const t=e.target;if(t.id==='tarot'){S.tarot=t.checked;afterSet();return}if(t.id==='cycle'){S.cycle=t.checked;afterSet();return}const k=t.dataset&&t.dataset.s;if(!k)return;
+ S[k]=k==='h24'?t.value==='true':(k==='saver'||k==='sunSec'||k==='moonSec')?parseFloat(t.value):t.value;afterSet()});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset&&t.dataset.lbl){const l=$('#'+t.dataset.lbl);if(l)l.textContent=secTxt(+t.value)}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(SV.on)wake();else closeSheet()}});
 ['pointerdown','touchstart','keydown'].forEach(t=>addEventListener(t,wake,{passive:true}));
 $('#sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
