@@ -95,12 +95,12 @@ body.sv::before,body.sv::after{display:block;z-index:31;width:22vw;height:22vw}
 @media (max-width:600px){.moon .whl{width:175%}.mw{--w:40vmin}}
 @media (min-width:1001px) and (orientation:landscape){.tile{min-height:max(15em,38vh)}}
 html.kiosk,html.kiosk body,html.wall,html.wall body{overflow:hidden;-webkit-user-select:none;user-select:none}
-html.kiosk #app{max-width:none;height:100vh;display:flex;flex-direction:column;padding:1.8vmin}
-html.kiosk .tiles{flex:1;min-height:0;gap:1.6vmin;grid-auto-rows:1fr}html.kiosk .tile{min-height:0}
+html.kiosk #app{max-width:none;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:1.8vmin}
+html.kiosk .tiles{flex:none;gap:1.6vmin;grid-auto-rows:auto}
 html.kiosk .btns,html.kiosk .nav2,html.kiosk .foot,html.kiosk .hd{display:none!important}html.kiosk .strip{margin:1.4vmin 0 0}html.kiosk .top{margin-bottom:1vmin}
 html.wall,html.wall body{cursor:none}html.wall #app{display:none}
-html.kiosk body{font-size:max(15px,2.9vmin)}html.kiosk .strip .up:nth-child(n+5){display:none}html.kiosk .tile{padding:.8em .9em}
-html.kiosk .whc svg{width:9em;height:9em}html.kiosk .cardsvg{width:4.6em;height:6.9em}
+html.kiosk body{font-size:max(15px,2.3vmin)}
+html.kiosk .whc svg{width:9em;height:9em}
 input,select,textarea{font-size:16px}
 .sin{padding-top:max(1.4em,env(safe-area-inset-top))}
 .sclk{top:max(1.3vw,env(safe-area-inset-top))}.sbar{bottom:max(2.5vh,env(safe-area-inset-bottom))}
@@ -367,7 +367,7 @@ function loadWx(){if(!hasLoc())return;
  const u=WXU+'?latitude='+S.lat+'&longitude='+S.lon+'&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&forecast_days=1&timezone=auto';
 fetch(u).then(r=>r.json()).then(j=>{if(!j||!j.current)return;const F=c=>Math.round(c*9/5+32),R=Math.round,cu=j.current.temperature_2m,hi=j.daily.temperature_2m_max[0],lo=j.daily.temperature_2m_min[0];WX={code:j.current.weather_code,nowC:R(cu),nowF:F(cu),hiC:R(hi),loC:R(lo),hiF:F(hi),loF:F(lo)};
   try{localStorage.setItem('wm_wx',JSON.stringify({k:'v2'+S.lat+','+S.lon,t:Date.now(),v:WX}))}catch(e){}render()}).catch(()=>{})}
-const wxLines=()=>{if(!WX)return [];const c=S.units==='C',n=c?WX.nowC+'\u00B0C / '+WX.nowF+'\u00B0F':WX.nowF+'\u00B0F / '+WX.nowC+'\u00B0C',f=WX.hiF+'\u00B0/'+WX.loF+'\u00B0F',k=WX.hiC+'\u00B0/'+WX.loC+'\u00B0C';return [wxIc(WX.code)+' '+n,(c?k:f),c?f:k]};
+const wxLines=()=>{if(!WX)return [];const c=S.units==='C',n=c?WX.nowC+'\u00B0C / '+WX.nowF+'\u00B0F':WX.nowF+'\u00B0F / '+WX.nowC+'\u00B0C',pr=(a,b)=>c?b+'\u00B0C / '+a+'\u00B0F':a+'\u00B0F / '+b+'\u00B0C';return [wxIc(WX.code)+' '+n,'\u25B2 '+pr(WX.hiF,WX.hiC),'\u25BC '+pr(WX.loF,WX.loC)]};
 const wxTxt=()=>wxLines().join(' \u00B7 ');
 
 /* ---------- main page ---------- */
