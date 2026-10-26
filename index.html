@@ -94,17 +94,17 @@ body.sv::before,body.sv::after{display:block;z-index:31;width:22vw;height:22vw}
 @media (prefers-reduced-motion:reduce){.mw{animation:none}.stars i{animation:none;opacity:.6}}
 @media (max-width:600px){.moon .whl{width:175%}.mw{--w:40vmin}}
 @media (min-width:1001px) and (orientation:landscape){.tile{min-height:max(15em,38vh)}}
-html.kiosk,html.kiosk body,html.wall,html.wall body{overflow:hidden;-webkit-user-select:none;user-select:none}
-html.kiosk #app{max-width:none;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:1.8vmin}
+html.kiosk,html.kiosk body,html.wall,html.wall body{overflow:hidden;-webkit-user-select:none;user-select:none}html.kiosk,html.kiosk body{overflow-x:hidden;overflow-y:auto}
+html.kiosk #app{max-width:none;min-height:100vh;display:flex;flex-direction:column;justify-content:space-evenly;gap:1.6vmin;padding:1.8vmin}
 html.kiosk .tiles{flex:none;gap:1.6vmin;grid-auto-rows:auto}
-html.kiosk .btns,html.kiosk .nav2,html.kiosk .foot,html.kiosk .hd{display:none!important}html.kiosk .strip{margin:1.4vmin 0 0}html.kiosk .top{margin-bottom:1vmin}
+html.kiosk .btns,html.kiosk .nav2,html.kiosk .foot{display:none!important}html.kiosk .hd{margin:0 2px .5vmin}html.kiosk .strip{margin:0}html.kiosk .top{margin:0 2px}
 html.wall,html.wall body{cursor:none}html.wall #app{display:none}
 html.kiosk body{font-size:max(15px,2.3vmin)}
 html.kiosk .whc svg{width:9em;height:9em}
 input,select,textarea{font-size:16px}
 .sin{padding-top:max(1.4em,env(safe-area-inset-top))}
 .sclk{top:max(1.3vw,env(safe-area-inset-top))}.sbar{bottom:max(2.5vh,env(safe-area-inset-bottom))}
-html.kiosk #app{height:100vh;height:100dvh}
+html.kiosk #app{min-height:100vh;min-height:100dvh}
 html.nofs [data-a=fs]{display:none}
 @media (max-width:420px){.tiles{gap:10px}.tile{padding:.8em .55em;min-height:13em}.mcal{padding:.5em .4em}.mg{font-size:.76em;line-height:2}.mh{font-size:1em}.mh button{padding:.2em .3em}.top h1{font-size:1.2em;white-space:nowrap}.bigclk{font-size:2.7em}.dw{font-size:1.5em}.dd{font-size:1.25em}.tt b{font-size:1.15em}.cardsvg{width:3.4em;height:5.1em}.whc svg{width:6em;height:6em}.leg{font-size:.65em;gap:.5em}.ib{padding:.45em .7em}}
 input[type=range]{width:100%;accent-color:var(--acc)}
@@ -403,7 +403,7 @@ function greet(now){const h=now.getHours(),g=h<5?'Still up':h<12?'Good morning':
 function render(){applyTheme();const now=new Date();
  $('#app').innerHTML=`<div class="top"><h1>☾ Wheel &amp; Moon<small>${greet(now)}${S.place?(S.name?' · ':'')+esc(S.place):''}</small></h1><div class="btns" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button class="ib" data-a="saver">${ic('moon')} Moon screen</button><button class="ib" data-a="fs" aria-label="Full screen">${ic('full')}</button><button class="ib" data-a="set" aria-label="Settings">${ic('gear')}</button></div></div>
  <div class="tiles">${tileDay(now)}${S.tarot?tileCard(now):''}${tileWheel(now)}${tileMonth(now)}</div>
- <div class="hd">Coming up in the sky</div><div class="strip">${upcoming(now)}</div>
+ <div class="sky"><div class="hd">Coming up in the sky</div><div class="strip">${upcoming(now)}</div></div>
  <div class="strip nav2"><button class="ib" data-a="wheel">${ic('wheel')} Wheel of the Year guide</button><button class="ib" data-a="moon">${ic('moon')} Moon guide</button></div>
  <div class="foot">Dates are calculated on your device. Tap any tile, day or festival for more.</div>`}
 
